@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/alepiz/code/copy_os/ForkProcess/hijos.c
+stdio.h
+-
+unistd.h
+-
+tareas.c
+/home/alepiz/code/copy_os/ForkProcess/tareas.c
+
+/home/alepiz/code/copy_os/ForkProcess/main.c
+stdio.h
+-
+unistd.h
+-
+hijos.c
+/home/alepiz/code/copy_os/ForkProcess/hijos.c
+
+/home/alepiz/code/copy_os/ForkProcess/tareas.c
+
