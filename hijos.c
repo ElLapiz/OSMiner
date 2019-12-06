@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "tareas.c"
+#include "memoryMinner.c"
+#include "cpuMinner.c"
+#include "diskMinner.c"
+#include "networkMinner.c"
 
 #define ERROR -1
 
@@ -47,4 +51,8 @@ int creaHijos(pid_t childPid, int argc, char **argv) {
         }
 
     }
+}
+
+void imprimeHijo(int numero) {
+    printf("Hijo : %d\n", (numero + 1));
 }
