@@ -13,6 +13,10 @@ unistd.h
 -
 string.h
 -
+ctype.h
+-
+stdlib.h
+-
 
 /home/bernalvm/Desktop/OSMiner/diskMinner.c
 stdio.h
