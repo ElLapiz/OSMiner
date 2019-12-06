@@ -6,21 +6,51 @@
 
 #IncludeRegexTransform: 
 
-/home/alepiz/code/copy_os/ForkProcess/hijos.c
+/home/bernalvm/Desktop/OSMiner/cpuMinner.c
 stdio.h
 -
 unistd.h
 -
-tareas.c
-/home/alepiz/code/copy_os/ForkProcess/tareas.c
+string.h
+-
 
-/home/alepiz/code/copy_os/ForkProcess/main.c
+/home/bernalvm/Desktop/OSMiner/diskMinner.c
+stdio.h
+-
+unistd.h
+-
+
+/home/bernalvm/Desktop/OSMiner/hijos.c
+stdio.h
+-
+unistd.h
+-
+memoryMinner.c
+/home/bernalvm/Desktop/OSMiner/memoryMinner.c
+cpuMinner.c
+/home/bernalvm/Desktop/OSMiner/cpuMinner.c
+diskMinner.c
+/home/bernalvm/Desktop/OSMiner/diskMinner.c
+networkMinner.c
+/home/bernalvm/Desktop/OSMiner/networkMinner.c
+
+/home/bernalvm/Desktop/OSMiner/main.c
 stdio.h
 -
 unistd.h
 -
 hijos.c
-/home/alepiz/code/copy_os/ForkProcess/hijos.c
+/home/bernalvm/Desktop/OSMiner/hijos.c
 
-/home/alepiz/code/copy_os/ForkProcess/tareas.c
+/home/bernalvm/Desktop/OSMiner/memoryMinner.c
+stdio.h
+-
+unistd.h
+-
+
+/home/bernalvm/Desktop/OSMiner/networkMinner.c
+stdio.h
+-
+unistd.h
+-
 

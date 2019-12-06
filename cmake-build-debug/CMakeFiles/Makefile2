@@ -44,10 +44,10 @@ RM = /snap/clion/97/bin/cmake/linux/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/alepiz/code/copy_os/SOMiner
+CMAKE_SOURCE_DIR = /home/bernalvm/Desktop/OSMiner
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/alepiz/code/copy_os/SOMiner/cmake-build-debug
+CMAKE_BINARY_DIR = /home/bernalvm/Desktop/OSMiner/cmake-build-debug
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -74,14 +74,14 @@ preinstall:
 CMakeFiles/ForkProcess.dir/all:
 	$(MAKE) -f CMakeFiles/ForkProcess.dir/build.make CMakeFiles/ForkProcess.dir/depend
 	$(MAKE) -f CMakeFiles/ForkProcess.dir/build.make CMakeFiles/ForkProcess.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alepiz/code/copy_os/SOMiner/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target ForkProcess"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/bernalvm/Desktop/OSMiner/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target ForkProcess"
 .PHONY : CMakeFiles/ForkProcess.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/ForkProcess.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alepiz/code/copy_os/SOMiner/cmake-build-debug/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/bernalvm/Desktop/OSMiner/cmake-build-debug/CMakeFiles 2
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/ForkProcess.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alepiz/code/copy_os/SOMiner/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/bernalvm/Desktop/OSMiner/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/ForkProcess.dir/rule
 
 # Convenience name for target.
