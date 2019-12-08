@@ -3,8 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
-
-void get_average_idle_percentage(char *data);
+#include "parser.c"
 
 char * readFile(){
     FILE *cpuInfo = fopen("/proc/stat", "rb");
@@ -19,35 +18,16 @@ char * readFile(){
     return line;
 }
 
-int isNumeric (const char * s){
-    if (s == NULL || *s == '\0' || isspace(*s))
-        return 0;
-    char * p;
-    strtod (s, &p);
-    return *p == '\0';
-}
-
-void get_average_idle_percentage(char *token) {
-    int sum;
-
-    while(token != NULL){
-        if(isNumeric(token)){
-            //sum = (int)token;
-            printf("%s\n", token);
-        }
-        token = strtok(NULL, " ");
-    }
-}
-
 void collectCpuData(int numero) {
     imprimeHijo(numero);
     printf("Collecting cpu data...\n");
 
     //Read /proc/stat
     char  * data =   strtok(readFile(), " ");
+    int * information = parse_char_to_int(data, 9);
 
     //get avegare idle percentage
-    get_average_idle_percentage(data);
+    //get_average_idle_percentage(data);
 }
 
 

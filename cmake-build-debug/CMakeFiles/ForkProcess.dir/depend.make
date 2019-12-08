@@ -7,4 +7,5 @@ CMakeFiles/ForkProcess.dir/main.c.o: ../hijos.c
 CMakeFiles/ForkProcess.dir/main.c.o: ../main.c
 CMakeFiles/ForkProcess.dir/main.c.o: ../memoryMinner.c
 CMakeFiles/ForkProcess.dir/main.c.o: ../networkMinner.c
+CMakeFiles/ForkProcess.dir/main.c.o: ../parser.c
 

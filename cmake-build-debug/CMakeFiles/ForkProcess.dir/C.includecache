@@ -17,6 +17,8 @@ ctype.h
 -
 stdlib.h
 -
+parser.c
+/home/bernalvm/Desktop/OSMiner/parser.c
 
 /home/bernalvm/Desktop/OSMiner/diskMinner.c
 stdio.h
@@ -57,4 +59,6 @@ stdio.h
 -
 unistd.h
 -
+
+/home/bernalvm/Desktop/OSMiner/parser.c
 
