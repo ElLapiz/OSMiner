@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include "parser.c"
 
+
+int get_average_idle_percentage(int *pInt);
+
 char * readFile(){
     FILE *cpuInfo = fopen("/proc/stat", "rb");
     static char line[1024];
@@ -23,11 +26,23 @@ void collectCpuData(int numero) {
     printf("Collecting cpu data...\n");
 
     //Read /proc/stat
-    char  * data =   strtok(readFile(), " ");
-    int * information = parse_char_to_int(data, 9);
+    char  *data =   strtok(readFile(), " ");
+
+    //Parse char to int
+    int *numeric_data = parse_char_to_int(data, 9);
+
+    printf("hola mundo");
 
     //get avegare idle percentage
-    //get_average_idle_percentage(data);
+    int idle = get_average_idle_percentage(numeric_data);
+    ver_idle(1);
 }
+
+int get_average_idle_percentage(int *numeric_data) {
+    int average_idle =  (numeric_data[3] * 100) / (numeric_data[0] + numeric_data[1] + numeric_data[2] +
+            numeric_data[3] + numeric_data[4] + numeric_data[5] + numeric_data[6]);
+    return average_idle;
+}
+
 
 
