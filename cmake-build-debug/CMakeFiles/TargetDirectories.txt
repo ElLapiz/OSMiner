@@ -1,0 +1,3 @@
+/home/alepiz/code/OSMiner/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/alepiz/code/OSMiner/cmake-build-debug/CMakeFiles/ForkProcess.dir
+/home/alepiz/code/OSMiner/cmake-build-debug/CMakeFiles/edit_cache.dir

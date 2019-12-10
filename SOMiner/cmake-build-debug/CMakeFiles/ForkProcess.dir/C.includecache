@@ -6,21 +6,21 @@
 
 #IncludeRegexTransform: 
 
-/home/alepiz/code/copy_os/ForkProcess/hijos.c
+/home/alepiz/code/SOMiner/SOMiner/hijos.c
 stdio.h
 -
 unistd.h
 -
 tareas.c
-/home/alepiz/code/copy_os/ForkProcess/tareas.c
+/home/alepiz/code/SOMiner/SOMiner/tareas.c
 
-/home/alepiz/code/copy_os/ForkProcess/main.c
+/home/alepiz/code/SOMiner/SOMiner/main.c
 stdio.h
 -
 unistd.h
 -
 hijos.c
-/home/alepiz/code/copy_os/ForkProcess/hijos.c
+/home/alepiz/code/SOMiner/SOMiner/hijos.c
 
-/home/alepiz/code/copy_os/ForkProcess/tareas.c
+/home/alepiz/code/SOMiner/SOMiner/tareas.c
 
