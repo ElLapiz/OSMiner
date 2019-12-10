@@ -15,6 +15,5 @@ void collectCPUData(int numero) {
      totalRead = strlen(buffer);
      buffer[totalRead - 1] = buffer[totalRead -1] == "\n"
                                 ? '\0'
-                                : buffer [totalRead - 1];
- }//while ends
+                                : buffer [totalRead - 1]; }//while ends
 }

@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named ForkProcess
+# Target rules for targets named SOMiner
 
 # Build rule for target.
-ForkProcess: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 ForkProcess
-.PHONY : ForkProcess
+SOMiner: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 SOMiner
+.PHONY : SOMiner
 
 # fast build rule for target.
-ForkProcess/fast:
-	$(MAKE) -f CMakeFiles/ForkProcess.dir/build.make CMakeFiles/ForkProcess.dir/build
-.PHONY : ForkProcess/fast
+SOMiner/fast:
+	$(MAKE) -f CMakeFiles/SOMiner.dir/build.make CMakeFiles/SOMiner.dir/build
+.PHONY : SOMiner/fast
 
 main.o: main.c.o
 
@@ -129,7 +129,7 @@ main.o: main.c.o
 
 # target to build an object file
 main.c.o:
-	$(MAKE) -f CMakeFiles/ForkProcess.dir/build.make CMakeFiles/ForkProcess.dir/main.c.o
+	$(MAKE) -f CMakeFiles/SOMiner.dir/build.make CMakeFiles/SOMiner.dir/main.c.o
 .PHONY : main.c.o
 
 main.i: main.c.i
@@ -138,7 +138,7 @@ main.i: main.c.i
 
 # target to preprocess a source file
 main.c.i:
-	$(MAKE) -f CMakeFiles/ForkProcess.dir/build.make CMakeFiles/ForkProcess.dir/main.c.i
+	$(MAKE) -f CMakeFiles/SOMiner.dir/build.make CMakeFiles/SOMiner.dir/main.c.i
 .PHONY : main.c.i
 
 main.s: main.c.s
@@ -147,7 +147,7 @@ main.s: main.c.s
 
 # target to generate assembly for a file
 main.c.s:
-	$(MAKE) -f CMakeFiles/ForkProcess.dir/build.make CMakeFiles/ForkProcess.dir/main.c.s
+	$(MAKE) -f CMakeFiles/SOMiner.dir/build.make CMakeFiles/SOMiner.dir/main.c.s
 .PHONY : main.c.s
 
 # Help Target
@@ -157,7 +157,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... ForkProcess"
+	@echo "... SOMiner"
 	@echo "... edit_cache"
 	@echo "... main.o"
 	@echo "... main.i"

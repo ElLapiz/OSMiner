@@ -1,3 +1,0 @@
-# OSMiner
-# OSMiner
-# OSMiner

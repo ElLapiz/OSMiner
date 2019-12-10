@@ -53,12 +53,12 @@ CMAKE_BINARY_DIR = /home/alepiz/code/SOMiner/SOMiner/cmake-build-debug
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/ForkProcess.dir/all
+all: CMakeFiles/SOMiner.dir/all
 
 .PHONY : all
 
 # The main recursive "clean" target.
-clean: CMakeFiles/ForkProcess.dir/clean
+clean: CMakeFiles/SOMiner.dir/clean
 
 .PHONY : clean
 
@@ -68,31 +68,31 @@ preinstall:
 .PHONY : preinstall
 
 #=============================================================================
-# Target rules for target CMakeFiles/ForkProcess.dir
+# Target rules for target CMakeFiles/SOMiner.dir
 
 # All Build rule for target.
-CMakeFiles/ForkProcess.dir/all:
-	$(MAKE) -f CMakeFiles/ForkProcess.dir/build.make CMakeFiles/ForkProcess.dir/depend
-	$(MAKE) -f CMakeFiles/ForkProcess.dir/build.make CMakeFiles/ForkProcess.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alepiz/code/SOMiner/SOMiner/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target ForkProcess"
-.PHONY : CMakeFiles/ForkProcess.dir/all
+CMakeFiles/SOMiner.dir/all:
+	$(MAKE) -f CMakeFiles/SOMiner.dir/build.make CMakeFiles/SOMiner.dir/depend
+	$(MAKE) -f CMakeFiles/SOMiner.dir/build.make CMakeFiles/SOMiner.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alepiz/code/SOMiner/SOMiner/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target SOMiner"
+.PHONY : CMakeFiles/SOMiner.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/ForkProcess.dir/rule: cmake_check_build_system
+CMakeFiles/SOMiner.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/alepiz/code/SOMiner/SOMiner/cmake-build-debug/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/ForkProcess.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/SOMiner.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/alepiz/code/SOMiner/SOMiner/cmake-build-debug/CMakeFiles 0
-.PHONY : CMakeFiles/ForkProcess.dir/rule
+.PHONY : CMakeFiles/SOMiner.dir/rule
 
 # Convenience name for target.
-ForkProcess: CMakeFiles/ForkProcess.dir/rule
+SOMiner: CMakeFiles/SOMiner.dir/rule
 
-.PHONY : ForkProcess
+.PHONY : SOMiner
 
 # clean rule for target.
-CMakeFiles/ForkProcess.dir/clean:
-	$(MAKE) -f CMakeFiles/ForkProcess.dir/build.make CMakeFiles/ForkProcess.dir/clean
-.PHONY : CMakeFiles/ForkProcess.dir/clean
+CMakeFiles/SOMiner.dir/clean:
+	$(MAKE) -f CMakeFiles/SOMiner.dir/build.make CMakeFiles/SOMiner.dir/clean
+.PHONY : CMakeFiles/SOMiner.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
