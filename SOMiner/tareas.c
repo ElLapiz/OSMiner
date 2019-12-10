@@ -1,3 +1,5 @@
+#include "cpu.c"
+
 void imprimeHijo(int numero) {
     printf("Hijo : %d\n", (numero + 1));
 }
@@ -5,6 +7,7 @@ void imprimeHijo(int numero) {
 void collectCpuData(int numero) {
     imprimeHijo(numero);
     printf("Hola vengo a recolectar datos de CPU\n");
+    getCPUData();
     sleep(1);
 }
 
