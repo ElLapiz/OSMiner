@@ -2,8 +2,8 @@
 
 #define BUFFER_SIZE 1000
 
-void imprimeHijo(int numero) {
-    printf("Id proceso: %d\n", (numero + 1));
+void imprimeHijoCPU(int numero) {
+    printf("Id proceso cpu: %d\n", (numero + 1));
 }
 
 void get_average_idle_percentage(int user, int nice,int system, int idle, int iowait, int irq, int softirq) {
@@ -12,7 +12,7 @@ void get_average_idle_percentage(int user, int nice,int system, int idle, int io
 }
 
 void collectCpuData(int numero) {
-    imprimeHijo(numero);
+    imprimeHijoCPU(numero);
 
     char buffer[BUFFER_SIZE];
     char header[3];

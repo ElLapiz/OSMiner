@@ -8,7 +8,5 @@
 int toAscii(char **param);
 void asignaTrabajo(int numero);
 int creaHijos(pid_t childPid, int argc, char **argv);
-void imprimeHijo(int numero);
-
 
 #endif //SISTEMINFOMINERS_FORK_H
