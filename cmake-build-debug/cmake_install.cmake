@@ -1,4 +1,4 @@
-# Install script for directory: /home/bernalvm/Desktop/OSMiner
+# Install script for directory: /home/intellign/Documents/bernaldo/OSMiner
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/bernalvm/Desktop/OSMiner/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/intellign/Documents/bernaldo/OSMiner/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

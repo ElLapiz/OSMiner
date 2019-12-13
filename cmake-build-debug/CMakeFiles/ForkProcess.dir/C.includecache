@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/bernalvm/Desktop/OSMiner/cpuMinner.c
+/home/intellign/Documents/bernaldo/OSMiner/cpuMinner.c
 stdio.h
 -
 unistd.h
@@ -18,47 +18,47 @@ ctype.h
 stdlib.h
 -
 parser.c
-/home/bernalvm/Desktop/OSMiner/parser.c
+/home/intellign/Documents/bernaldo/OSMiner/parser.c
 
-/home/bernalvm/Desktop/OSMiner/diskMinner.c
+/home/intellign/Documents/bernaldo/OSMiner/diskMinner.c
 stdio.h
 -
 unistd.h
 -
 
-/home/bernalvm/Desktop/OSMiner/hijos.c
+/home/intellign/Documents/bernaldo/OSMiner/hijos.c
 stdio.h
 -
 unistd.h
 -
 memoryMinner.c
-/home/bernalvm/Desktop/OSMiner/memoryMinner.c
+/home/intellign/Documents/bernaldo/OSMiner/memoryMinner.c
 cpuMinner.c
-/home/bernalvm/Desktop/OSMiner/cpuMinner.c
+/home/intellign/Documents/bernaldo/OSMiner/cpuMinner.c
 diskMinner.c
-/home/bernalvm/Desktop/OSMiner/diskMinner.c
+/home/intellign/Documents/bernaldo/OSMiner/diskMinner.c
 networkMinner.c
-/home/bernalvm/Desktop/OSMiner/networkMinner.c
+/home/intellign/Documents/bernaldo/OSMiner/networkMinner.c
 
-/home/bernalvm/Desktop/OSMiner/main.c
+/home/intellign/Documents/bernaldo/OSMiner/main.c
 stdio.h
 -
 unistd.h
 -
 hijos.c
-/home/bernalvm/Desktop/OSMiner/hijos.c
+/home/intellign/Documents/bernaldo/OSMiner/hijos.c
 
-/home/bernalvm/Desktop/OSMiner/memoryMinner.c
+/home/intellign/Documents/bernaldo/OSMiner/memoryMinner.c
 stdio.h
 -
 unistd.h
 -
 
-/home/bernalvm/Desktop/OSMiner/networkMinner.c
+/home/intellign/Documents/bernaldo/OSMiner/networkMinner.c
 stdio.h
 -
 unistd.h
 -
 
-/home/bernalvm/Desktop/OSMiner/parser.c
+/home/intellign/Documents/bernaldo/OSMiner/parser.c
 
