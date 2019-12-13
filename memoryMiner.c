@@ -1,13 +1,14 @@
 #include "memoryMiner.h"
 #define BUFFER_SIZE 1000
 
-
+/*
 void imprimeHijo(int numero) {
     printf("Id proceso: %d\n", (numero + 1));
 }
+*/
 
 void collectMemData(int numero) {
-    imprimeHijo(numero);
+    //imprimeHijo(numero);
 
     FILE *ramInfo = fopen("/proc/meminfo", "rb");
     char line[1024];
