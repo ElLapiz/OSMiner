@@ -1,9 +1,5 @@
-#include <stdio.h>
-#include <unistd.h>
-#include "memoryMinner.c"
-#include "cpuMinner.c"
-#include "diskMinner.c"
-#include "networkMinner.c"
+#include "fork.h"
+#include "cpuMiner.h"
 
 #define ERROR -1
 
@@ -19,13 +15,13 @@ void asignaTrabajo(int numero) {
             collectCpuData(numero);
             break;
         case 100:  //d
-            collectDiskData(numero);
+            //collectDiskData(numero);
             break;
         case 109:  //m
-            collectMemData(numero);
+            //collectMemData(numero);
             break;
         case 110: //n
-            collectNetData(numero);
+            //collectNetData(numero);
             break;
         deafult:
             break;
@@ -50,8 +46,4 @@ int creaHijos(pid_t childPid, int argc, char **argv) {
         }
 
     }
-}
-
-void imprimeHijo(int numero) {
-    printf("Hijo : %d\n", (numero + 1));
 }
