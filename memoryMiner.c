@@ -19,7 +19,7 @@ void collectMemData(int numero) {
         value[i] = memTotal;
     }
 
-    memory_idle = (value[2] * 100) / value[0];
+    memory_idle = (value[1] * 100) / value[2];
     printf("Memoria disponible: %d % \n", memory_idle);
 
     fclose(ramInfo);
