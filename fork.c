@@ -1,6 +1,8 @@
 #include "fork.h"
 #include "cpuMiner.h"
 #include "memoryMiner.h"
+#include "networkMIner.h"
+#include "diskMinner.h"
 
 #define ERROR -1
 
@@ -16,13 +18,13 @@ void asignaTrabajo(int numero) {
             collectCpuData(numero);
             break;
         case 100:  //d
-            //collectDiskData(numero);
+            collectDiskData(numero);
             break;
         case 109:  //m
             collectMemData(numero);
             break;
         case 110: //n
-            //collectNetData(numero);
+            collectNetData(numero);
             break;
         deafult:
             break;

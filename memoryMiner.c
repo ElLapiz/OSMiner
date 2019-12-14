@@ -5,7 +5,6 @@ void imprimeHijoMemoria(int numero) {
 }
 
 void collectMemData(int numero) {
-    imprimeHijoMemoria(numero);
 
     FILE *ramInfo = fopen("/proc/meminfo", "r");
 
@@ -20,7 +19,11 @@ void collectMemData(int numero) {
     }
 
     memory_idle = (value[1] * 100) / value[2];
+
+    printf("************************************************************************************************* \n");
+    imprimeHijoMemoria(numero);
     printf("Memoria disponible: %d % \n", memory_idle);
+    printf("************************************************************************************************* \n");
 
     fclose(ramInfo);
 }

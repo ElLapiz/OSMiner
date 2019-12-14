@@ -9,10 +9,11 @@ void imprimeHijoCPU(int numero) {
 void get_average_idle_percentage(int user, int nice,int system, int idle, int iowait, int irq, int softirq) {
     int average_idle = ( idle * 100 ) / ( user + nice + system + idle + iowait + irq + softirq );
     printf("CPU disponible: %d% \n", average_idle);
+    printf("************************************************************************************************* \n");
+
 }
 
 void collectCpuData(int numero) {
-    imprimeHijoCPU(numero);
 
     char buffer[BUFFER_SIZE];
     char header[3];
@@ -24,6 +25,8 @@ void collectCpuData(int numero) {
 
     sscanf(buffer,"%s %d %d %d %d %d %d %d %d %d %d", header, &user, &nice, &system, &idle, &iowait, &irq, &softirq, &other1 , &other2, &other3);
 
+    printf("************************************************************************************************* \n");
+    imprimeHijoCPU(numero);
     get_average_idle_percentage(user, nice,system, idle, iowait,irq, softirq);
 
     fclose(dato);
