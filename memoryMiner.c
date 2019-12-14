@@ -7,19 +7,20 @@ void imprimeHijoMemoria(int numero) {
 void collectMemData(int numero) {
     imprimeHijoMemoria(numero);
 
-    FILE *ramInfo = fopen("/proc/meminfo", "rb");
-    char line[1024];
-    char kb[2];
-    char header[10];
-    long int memTotal;
+    FILE *ramInfo = fopen("/proc/meminfo", "r");
 
-    for (int i = 0; i < 2; ++i) {
+    char kb[2], header[10],  line[1024];
+    long int memTotal, value[2], memory_idle;
+
+    for (int i = 0; i < 3; ++i) {
         fgets(line, 1024, ramInfo);
         printf("%s", line);
         sscanf(line,"%s %d %s", header, &memTotal, kb);
-        printf("idle %d", memTotal);
+        value[i] = memTotal;
     }
-    
+
+    memory_idle = (value[2] * 100) / value[0];
+    printf("Memoria disponible: %d % \n", memory_idle);
+
     fclose(ramInfo);
 }
-
