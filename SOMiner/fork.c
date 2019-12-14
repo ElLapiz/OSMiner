@@ -1,6 +1,8 @@
-#include <stdio.h>
-#include <unistd.h>
-#include "tareas.c"
+#include "fork.h"
+#include "cpuMiner.h"
+#include "memoryMiner.h"
+#include "networkMIner.h"
+#include "diskMinner.h"
 
 #define ERROR -1
 

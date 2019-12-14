@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.15)
-project(SOMiner C)
+cmake_minimum_required(VERSION 3.14)
+project(ForkProcess C)
 
-set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD 11)
 
-add_executable(SOMiner main.c)
+add_executable(ForkProcess main.c)
