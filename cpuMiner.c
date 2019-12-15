@@ -1,4 +1,5 @@
 #include "cpuMiner.h"
+#include "queue.h"
 
 #define BUFFER_SIZE 1000
 
