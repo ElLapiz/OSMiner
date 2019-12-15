@@ -2,7 +2,9 @@
 #include <sys/prctl.h>
 #include "cpuMiner.h"
 #include "queue.h"
+
 #include "http.h"
+#include "tlpi_hdr.h"
 
 #define BUFFER_SIZE 1000
 
@@ -10,7 +12,7 @@ typedef struct data data;
 
 data datos[50];
 char default_tag[1000] = "aqui viene el tag del Json";  //TODO: hacer el timestamp y lo que haga falta para el JSON
-pthread_mutex_t datos_lock;    //Mutex asignado para avisar del uso de "datos[]"
+
 
 int get_average_idle_percentage(int user, int nice, int system, int idle, int iowait, int irq, int softirq) {
     int average_idle = ( idle * 100 ) / ( user + nice + system + idle + iowait + irq + softirq );
@@ -18,6 +20,7 @@ int get_average_idle_percentage(int user, int nice, int system, int idle, int io
     return average_idle;
 }
 
+/*
 struct data creaStructData(int user, int nice, int system, int idle, int iowait, int irq, int softirq) {
     struct data data;
     data.metric = get_average_idle_percentage(user, nice, system, idle, iowait, irq, softirq);
@@ -65,18 +68,26 @@ void syncAgregaData(long user, long nice, long system, long idle, long iowait, l
 }
 
 
-
-//------------------------------------------------------
-//          hilos
-//------------------------------------------------------
-
 void* mandaJSON(void *arg){
     data data = syncExtraeData(); //datos a convertir
     printf("Data: %d", data); //para efectos de prueba
     //TODO: convertir a JSON y mandar a servidor
 }
 
-void* minaDatos() {
+*/
+
+//------------------------------------------------------
+//          hilos
+//------------------------------------------------------
+static volatile int glob = 0;
+static pthread_mutex_t datos_lock = PTHREAD_MUTEX_INITIALIZER;
+
+
+static void* minarDatos(void *arg) {
+
+    int  s;
+    s = pthread_mutex_lock(&datos_lock); //Mutex
+
     char buffer[BUFFER_SIZE];
     char header[3];
     long int user, nice,system, idle, iowait,irq, softirq, other1, other2, other3;
@@ -87,19 +98,50 @@ void* minaDatos() {
     //syncAgregaData(user, nice, system, idle, iowait, irq, softirq);
     get_average_idle_percentage(user, nice, system, idle, iowait, irq, softirq);
     fclose(dato);
+
+    s = pthread_mutex_unlock(&datos_lock);
+    printf("desbloqueado \n");
+    if (s != 0)
+        printf("Error desbloqueand mutex CPU");
+
 }
 
+void* mandarJSON(void *arg){
+    printf("En segundo hilo");
+    /*
+    data data = syncExtraeData(); //datos a convertir
+    printf("Data: %d", data); //para efectos de prueba
+    //TODO: convertir a JSON y mandar a servidor
+     */
+}
 
 //----------------------------------------------------------
 //Funcion principal
 //----------------------------------------------------------
 void collectCpuData(int numero) {
-    minaDatos();
-    /*
-    pthread_t minaDatos;
-    pthread_t mandaJson;
+    pthread_t minaDatos, mandaJson;
+    int loops = 10, s;
 
-    bool padre_vive = prctl(PR_GET_PDEATHSIG); //Recibe señal de muerte de padre
+    //bool padre_vive = prctl(PR_GET_PDEATHSIG); //Recibe señal de muerte de padre
+
+    for(int i =0; i<4;i++){         //activa hilos
+
+        s = pthread_create(&minaDatos, NULL, minarDatos, &loops);
+        if (s != 0)
+            printf("Error creando hilo de mineria CPU");
+
+        s = pthread_create(&mandaJson, NULL, mandarJSON, &loops);
+        if (s != 0)
+            printf("Error creando hilo de envio CPU");
+
+    }
+    pthread_mutex_destroy(&datos_lock); //destruye el mutex
+
+
+    exit(EXIT_SUCCESS);
+
+
+    /*
 
     while(padre_vive){         //activa hilos
         pthread_create(&minaDatos, NULL , minaDatos , NULL);
