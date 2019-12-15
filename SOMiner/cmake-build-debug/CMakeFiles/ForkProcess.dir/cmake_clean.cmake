@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/ForkProcess.dir/main.c.o"
+  "CMakeFiles/ForkProcess.dir/queue.c.o"
   "ForkProcess"
   "ForkProcess.pdb"
 )

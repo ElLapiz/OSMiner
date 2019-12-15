@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
   "/home/alepiz/code/SOMiner/SOMiner/main.c" "/home/alepiz/code/SOMiner/SOMiner/cmake-build-debug/CMakeFiles/ForkProcess.dir/main.c.o"
+  "/home/alepiz/code/SOMiner/SOMiner/queue.c" "/home/alepiz/code/SOMiner/SOMiner/cmake-build-debug/CMakeFiles/ForkProcess.dir/queue.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 
