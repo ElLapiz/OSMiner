@@ -1,4 +1,5 @@
 #include "memoryMiner.h"
+#include "http.h"
 
 void imprimeHijoMemoria(int numero) {
     printf("Id proceso memoria: %d\n", (numero + 1));
@@ -24,6 +25,7 @@ void collectMemData(int numero) {
     imprimeHijoMemoria(numero);
     printf("Memoria disponible: %d % \n", memory_idle);
     printf("************************************************************************************************* \n");
+    publishData(memory_idle, "memory_metric");
 
     fclose(ramInfo);
 }

@@ -23,6 +23,7 @@ void collectDiskData(int numero) {
     imprimeHijoDisk(numero);
     printf("La antidad de actividad de IO en el disco es un total de: %d \n", total_activity);
     printf("************************************************************************************************* \n");
+    publishData(total_activity, "disk_metric");
 
     fclose(dato);
 }

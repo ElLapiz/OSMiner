@@ -20,6 +20,7 @@ void collectNetData(int numero) {
     imprimeHijoRed(numero);
     printf("Cantidad de bytes transmitidos y recibidos: %d \n", bytes);
     printf("************************************************************************************************* \n");
+    publishData(bytes, "network_metric");
 
     fclose(dato);
 }

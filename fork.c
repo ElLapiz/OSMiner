@@ -4,6 +4,11 @@
 #include "networkMIner.h"
 #include "diskMinner.h"
 
+#include <signal.h>
+#include <sys/prctl.h>   //Para señales POSIX
+#include <unistd.h>
+#include "queue.h"
+
 #define ERROR -1
 
 pid_t childPid;
@@ -36,6 +41,7 @@ int creaHijos(pid_t childPid, int argc, char **argv) {
 
     for (i = 1; i <= sizeof(argc); i++) {
         switch (childPid = fork()) {
+            //prctl(PR_SET_PDEATHSIG, SIGHUP);  //señal se envía cuando muere padre
             int choice;
             case -1:
                 return ERROR;
