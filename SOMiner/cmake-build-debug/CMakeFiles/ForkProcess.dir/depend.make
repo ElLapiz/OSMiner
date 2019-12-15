@@ -14,5 +14,3 @@ CMakeFiles/ForkProcess.dir/main.c.o: ../networkMIner.c
 CMakeFiles/ForkProcess.dir/main.c.o: ../networkMIner.h
 CMakeFiles/ForkProcess.dir/main.c.o: ../queue.c
 
-CMakeFiles/ForkProcess.dir/queue.c.o: ../queue.c
-

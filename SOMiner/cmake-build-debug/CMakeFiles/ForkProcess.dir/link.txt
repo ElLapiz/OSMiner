@@ -1,1 +1,1 @@
-/usr/bin/cc -g   CMakeFiles/ForkProcess.dir/main.c.o CMakeFiles/ForkProcess.dir/queue.c.o  -o ForkProcess 
+/usr/bin/cc -g   CMakeFiles/ForkProcess.dir/main.c.o  -o ForkProcess 

@@ -81,9 +81,6 @@
 		<Unit filename="/home/alepiz/code/SOMiner/SOMiner/main.c">
 			<Option target="ForkProcess"/>
 		</Unit>
-		<Unit filename="/home/alepiz/code/SOMiner/SOMiner/queue.c">
-			<Option target="ForkProcess"/>
-		</Unit>
 		<Unit filename="/home/alepiz/code/SOMiner/SOMiner/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
