@@ -12,31 +12,7 @@ typedef struct data data;
 
 data datos[50];
 char default_tag[1000] = "aqui viene el tag del Json";  //TODO: hacer el timestamp y lo que haga falta para el JSON
-
-
-int get_average_idle_percentage(int user, int nice, int system, int idle, int iowait, int irq, int softirq) {
-    int average_idle = ( idle * 100 ) / ( user + nice + system + idle + iowait + irq + softirq );
-    printf("CPU disponible: %d% \n", average_idle);
-    return average_idle;
-}
-
-/*
-struct data creaStructData(int user, int nice, int system, int idle, int iowait, int irq, int softirq) {
-    struct data data;
-    data.metric = get_average_idle_percentage(user, nice, system, idle, iowait, irq, softirq);
-    data.tag = &default_tag;
-    return data;
-}
-
-data agregaData(long user, long nice, long system, long idle, long iowait, long irq, long softirq){
-
-    pthread_mutex_lock(&datos_lock);  //bloquea datos_lock
-
-    struct data data = creaStructData(user, nice, system, idle, iowait, irq, softirq);
-    insert(data, datos);
-
-    pthread_mutex_unlock(&datos_lock);  //desbloquea datos_lock
-}
+static pthread_mutex_t datos_lock = PTHREAD_MUTEX_INITIALIZER;
 
 data extraeData(){
     pthread_mutex_lock(&datos_lock);  //bloquea datos_lock
@@ -56,6 +32,28 @@ data syncExtraeData(){
     }
 }
 
+int get_average_idle_percentage(int user, int nice, int system, int idle, int iowait, int irq, int softirq) {
+    int average_idle = ( idle * 100 ) / ( user + nice + system + idle + iowait + irq + softirq );
+    printf("CPU disponible: %d% \n", average_idle);
+    return average_idle;
+}
+
+struct data creaStructData(int user, int nice, int system, int idle, int iowait, int irq, int softirq) {
+    struct data data;
+    data.metric = get_average_idle_percentage(user, nice, system, idle, iowait, irq, softirq);
+    data.tag = &default_tag;
+    return data;
+}
+
+data agregaData(long user, long nice, long system, long idle, long iowait, long irq, long softirq){
+
+    pthread_mutex_lock(&datos_lock);  //bloquea datos_lock
+
+    struct data data = creaStructData(user, nice, system, idle, iowait, irq, softirq);
+    insert(data, datos);
+
+    pthread_mutex_unlock(&datos_lock);  //desbloquea datos_lock
+}
 
 
 void syncAgregaData(long user, long nice, long system, long idle, long iowait, long irq, long softirq) {
@@ -68,20 +66,9 @@ void syncAgregaData(long user, long nice, long system, long idle, long iowait, l
 }
 
 
-void* mandaJSON(void *arg){
-    data data = syncExtraeData(); //datos a convertir
-    printf("Data: %d", data); //para efectos de prueba
-    //TODO: convertir a JSON y mandar a servidor
-}
-
-*/
-
 //------------------------------------------------------
 //          hilos
 //------------------------------------------------------
-static volatile int glob = 0;
-static pthread_mutex_t datos_lock = PTHREAD_MUTEX_INITIALIZER;
-
 
 static void* minarDatos(void *arg) {
 
@@ -95,8 +82,8 @@ static void* minarDatos(void *arg) {
     fgets(buffer, BUFFER_SIZE, dato);
     printf("%s \n", buffer);
     sscanf(buffer,"%s %d %d %d %d %d %d %d %d %d %d", header, &user, &nice, &system, &idle, &iowait, &irq, &softirq, &other1 , &other2, &other3);
-    //syncAgregaData(user, nice, system, idle, iowait, irq, softirq);
-    get_average_idle_percentage(user, nice, system, idle, iowait, irq, softirq);
+    syncAgregaData(user, nice, system, idle, iowait, irq, softirq);
+    //get_average_idle_percentage(user, nice, system, idle, iowait, irq, softirq);
     fclose(dato);
 
     s = pthread_mutex_unlock(&datos_lock);
@@ -107,12 +94,12 @@ static void* minarDatos(void *arg) {
 }
 
 void* mandarJSON(void *arg){
-    printf("En segundo hilo");
-    /*
+    printf("********************** En segundo hilo\n");
+
     data data = syncExtraeData(); //datos a convertir
-    printf("Data: %d", data); //para efectos de prueba
+    printf("Data en cola: %d \n", data); //para efectos de prueba
     //TODO: convertir a JSON y mandar a servidor
-     */
+
 }
 
 //----------------------------------------------------------
