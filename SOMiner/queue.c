@@ -14,7 +14,7 @@ int rear = -1;
 int itemCount = 0;
 
 struct data{
-    char tag[1000];
+    char *tag;
     int metric;
 };
 
