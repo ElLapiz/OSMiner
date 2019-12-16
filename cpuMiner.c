@@ -2,7 +2,6 @@
 #include <sys/prctl.h>
 #include "cpuMiner.h"
 #include "queue.h"
-
 #include "http.h"
 #include "tlpi_hdr.h"
 
@@ -11,8 +10,10 @@
 typedef struct data data;
 
 data datos[50];
-char default_tag[1000] = "aqui viene el tag del Json";  //TODO: hacer el timestamp y lo que haga falta para el JSON
+
+char default_tag[1000] = "metrics_cpu";
 static pthread_mutex_t datos_lock = PTHREAD_MUTEX_INITIALIZER;
+
 
 data extraeData(){
     pthread_mutex_lock(&datos_lock);  //bloquea datos_lock
@@ -32,6 +33,7 @@ data syncExtraeData(){
     }
 }
 
+
 int get_average_idle_percentage(int user, int nice, int system, int idle, int iowait, int irq, int softirq) {
     int average_idle = ( idle * 100 ) / ( user + nice + system + idle + iowait + irq + softirq );
     printf("CPU disponible: %d% \n", average_idle);
@@ -39,28 +41,27 @@ int get_average_idle_percentage(int user, int nice, int system, int idle, int io
 }
 
 struct data creaStructData(int user, int nice, int system, int idle, int iowait, int irq, int softirq) {
-    struct data data;
-    data.metric = get_average_idle_percentage(user, nice, system, idle, iowait, irq, softirq);
-    data.tag = &default_tag;
-    return data;
+    struct data percentaje;
+    percentaje.metric = get_average_idle_percentage(user, nice, system, idle, iowait, irq, softirq);
+    percentaje.tag = &default_tag;
+    return percentaje;
 }
 
 data agregaData(long user, long nice, long system, long idle, long iowait, long irq, long softirq){
 
     pthread_mutex_lock(&datos_lock);  //bloquea datos_lock
 
-    struct data data = creaStructData(user, nice, system, idle, iowait, irq, softirq);
-    insert(data, datos);
+    struct data info = creaStructData(user, nice, system, idle, iowait, irq, softirq);
+    insert(info, datos);
 
     pthread_mutex_unlock(&datos_lock);  //desbloquea datos_lock
 }
 
 
 void syncAgregaData(long user, long nice, long system, long idle, long iowait, long irq, long softirq) {
-    if (pthread_mutex_init(&datos_lock, NULL) != 0)
-    {
+    if (pthread_mutex_init(&datos_lock, NULL) != 0){
         sleep(500);
-    }else {
+    } else {
         agregaData(user, nice, system, idle, iowait, irq, softirq);
     }
 }
@@ -111,7 +112,7 @@ void collectCpuData(int numero) {
 
     //bool padre_vive = prctl(PR_GET_PDEATHSIG); //Recibe señal de muerte de padre
 
-    for(int i =0; i<4;i++){         //activa hilos
+    for(int i =0; i<1;i++){         //activa hilos
 
         s = pthread_create(&minaDatos, NULL, minarDatos, &loops);
         if (s != 0)

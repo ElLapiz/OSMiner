@@ -17,26 +17,24 @@ struct data peek(struct data datos[]) {
     return datos[front];
 }
 
-bool isEmpty(struct data datos[]) {
+bool isEmpty() {
     return itemCount == 0;
 }
 
-bool isFull(struct data datos[]) {
+bool isFull() {
     return itemCount == MAX;
 }
 
-int size(struct data datos[]) {
+int size() {
     return itemCount;
 }
 
 void insert(struct data data, struct data datos[]) {
-
-    if(!isFull(datos)) {
+    if(!isFull()) {
 
         if(rear == MAX-1) {
             rear = -1;
         }
-
         datos[++rear] = data;
         itemCount++;
     }
@@ -50,5 +48,7 @@ struct data removeData(struct data datos[]){
     }
 
     itemCount--;
+    printf("extrayendo %s %d",  datos->tag, datos->metric);
+
     return data;
 }

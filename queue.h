@@ -8,9 +8,9 @@
 #include <stdbool.h>
 
 struct data peek(struct data datos[]);
-bool isEmpty(struct data datos[]);
-bool isFull(struct data datos[]);
-int size(struct data datos[]);
+bool isEmpty();
+bool isFull();
+int size();
 void insert(struct data data, struct data datos[]);
 struct data removeData(struct data datos[]);
 
