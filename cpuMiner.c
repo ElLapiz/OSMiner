@@ -15,23 +15,20 @@ char default_tag[16] = "cpu_metric";
 static pthread_mutex_t datos_lock = PTHREAD_MUTEX_INITIALIZER;
 
 
-data extraeData(){
+void extraeData(){
     pthread_mutex_lock(&datos_lock);  //bloquea datos_lock
     struct data data;
     data = removeData(datos);
-    publishData(data.metric, data.tag);
-
-
+    publishData(data.metric, data.tag); //Publica en el server
     pthread_mutex_unlock(&datos_lock);  //desbloquea datos_lock
-    return data;
 }
 
-data syncExtraeData(){
+void syncExtraeData(){
     if (pthread_mutex_init(&datos_lock, NULL) != 0)
     {
         sleep(500);
     }else {
-        return extraeData();
+        extraeData();
     }
 }
 
@@ -93,7 +90,7 @@ static void* minarDatos(void *arg) {
 void* mandarJSON(void *arg){
     printf("********************** En segundo hilo\n");
 
-    data data = syncExtraeData(); //datos a convertir
+    syncExtraeData(); //datos a convertir
 }
 
 //----------------------------------------------------------
