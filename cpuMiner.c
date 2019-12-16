@@ -21,7 +21,6 @@ data extraeData(){
     data = removeData(datos);
     pthread_mutex_unlock(&datos_lock);  //desbloquea datos_lock
     return data;
-    //TODO: mandar data a JSON, crear threads, publicar POST
 }
 
 data syncExtraeData(){
@@ -48,19 +47,16 @@ struct data creaStructData(int user, int nice, int system, int idle, int iowait,
 }
 
 data agregaData(long user, long nice, long system, long idle, long iowait, long irq, long softirq){
-
     pthread_mutex_lock(&datos_lock);  //bloquea datos_lock
-
     struct data info = creaStructData(user, nice, system, idle, iowait, irq, softirq);
     insert(info, datos);
-
     pthread_mutex_unlock(&datos_lock);  //desbloquea datos_lock
 }
 
 
 void syncAgregaData(long user, long nice, long system, long idle, long iowait, long irq, long softirq) {
     if (pthread_mutex_init(&datos_lock, NULL) != 0){
-        sleep(500);
+        sleep(1);
     } else {
         agregaData(user, nice, system, idle, iowait, irq, softirq);
     }
@@ -72,7 +68,6 @@ void syncAgregaData(long user, long nice, long system, long idle, long iowait, l
 //------------------------------------------------------
 
 static void* minarDatos(void *arg) {
-
     int  s;
     s = pthread_mutex_lock(&datos_lock); //Mutex
 
@@ -88,17 +83,15 @@ static void* minarDatos(void *arg) {
     fclose(dato);
 
     s = pthread_mutex_unlock(&datos_lock);
-    printf("desbloqueado \n");
     if (s != 0)
         printf("Error desbloqueand mutex CPU");
-
 }
 
 void* mandarJSON(void *arg){
     printf("********************** En segundo hilo\n");
 
     data data = syncExtraeData(); //datos a convertir
-    printf("Data en cola: %d \n", data); //para efectos de prueba
+    printf("Data en cola: %s %d \n", data.tag, data.metric); //para efectos de prueba
     //TODO: convertir a JSON y mandar a servidor
 
 }
@@ -118,13 +111,13 @@ void collectCpuData(int numero) {
         if (s != 0)
             printf("Error creando hilo de mineria CPU");
 
+        sleep(1);
         s = pthread_create(&mandaJson, NULL, mandarJSON, &loops);
         if (s != 0)
             printf("Error creando hilo de envio CPU");
 
     }
     pthread_mutex_destroy(&datos_lock); //destruye el mutex
-
 
     exit(EXIT_SUCCESS);
 
