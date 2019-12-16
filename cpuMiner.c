@@ -11,7 +11,7 @@ typedef struct data data;
 
 data datos[50];
 
-char default_tag[1000] = "metrics_cpu";
+char default_tag[16] = "cpu_metric";
 static pthread_mutex_t datos_lock = PTHREAD_MUTEX_INITIALIZER;
 
 
@@ -19,6 +19,9 @@ data extraeData(){
     pthread_mutex_lock(&datos_lock);  //bloquea datos_lock
     struct data data;
     data = removeData(datos);
+    publishData(data.metric, data.tag);
+
+
     pthread_mutex_unlock(&datos_lock);  //desbloquea datos_lock
     return data;
 }
@@ -91,9 +94,6 @@ void* mandarJSON(void *arg){
     printf("********************** En segundo hilo\n");
 
     data data = syncExtraeData(); //datos a convertir
-    printf("Data en cola: %s %d \n", data.tag, data.metric); //para efectos de prueba
-    //TODO: convertir a JSON y mandar a servidor
-
 }
 
 //----------------------------------------------------------
