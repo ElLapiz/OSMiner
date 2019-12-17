@@ -5,6 +5,7 @@
 #include "http.h"
 
 #define BUFFER_SIZE 1000
+#define ERROR 1
 
 typedef struct data data;
 
@@ -24,10 +25,19 @@ struct data creaStructDisckData(long int total_activity) {
 }
 
 data agregaDataDisk(long int total_activity){
-    pthread_mutex_lock(&disk_lock);  //bloquea datos_lock
+    int t;
+    t =pthread_mutex_lock(&disk_lock);  //bloquea datos_lock
+    if (t != 0){
+        _exit(ERROR);
+    }
+
     struct data info = creaStructDisckData(total_activity);
     insert(info, datos_disk);
-    pthread_mutex_unlock(&disk_lock);  //desbloquea datos_lock
+
+    t = pthread_mutex_unlock(&disk_lock);  //desbloquea datos_lock
+    if (t != 0){
+        _exit(ERROR);
+    }
 }
 
 
@@ -44,8 +54,11 @@ void syncAgregaDataDisco(long int total_activity) {
 //  Hilos
 //------------------------------------------
 static void* minarDisco(void *arg) {
-   pthread_mutex_lock(&disk_lock); //Mutex
-
+    int t;
+    t = pthread_mutex_lock(&disk_lock); //Mutex
+    if (t != 0){
+        _exit(ERROR);
+    }
 
     char line[1024], valor3[10];
     long int valor1, valor2, reads, valor5, valor6, valor7, lectures, reads_sum, lectures_sum, total_activity;
@@ -62,15 +75,27 @@ static void* minarDisco(void *arg) {
     syncAgregaDataDisco(total_activity);
     fclose(dato);
 
-    pthread_mutex_unlock(&disk_lock);
+    t = pthread_mutex_unlock(&disk_lock);
+    if (t != 0){
+        _exit(ERROR);
+    }
 }
 
 void extraeDataDisco(){
-    pthread_mutex_lock(&disk_lock);  //bloquea datos_lock
+    int t;
+    t = pthread_mutex_lock(&disk_lock);  //bloquea datos_lock
+    if (t != 0){
+        _exit(ERROR);
+    }
+
     struct data data;
     data = removeData(datos_disk);
     publishData(data.metric, data.tag); //Publica en el server
-    pthread_mutex_unlock(&disk_lock);  //desbloquea datos_lock
+
+    t = pthread_mutex_unlock(&disk_lock);  //desbloquea datos_lock
+    if (t != 0){
+        _exit(ERROR);
+    }
 }
 
 void syncExtraeDataDisco(){
@@ -93,8 +118,9 @@ void collectDiskData(int numero) {
     int t_minaDisco;
 
     t_minaDisco = pthread_create(&minaDisco, NULL, minarDisco, NULL);
-    if (t_minaDisco != 0)
-        printf("Error creando hilo de mineria CPU");
+    if (t_minaDisco != 0){
+        _exit(ERROR);
+    }
 
     sleep(1);//Esperar a que se llene la cola por primera vez
 
@@ -106,8 +132,15 @@ void collectDiskData(int numero) {
 
     envarDisco(1);
 
-    pthread_mutex_destroy(&disk_lock); //destruye el mutex
-    pthread_join(&minaDisco, NULL);
+    t_minaDisco = pthread_mutex_destroy(&disk_lock); //destruye el mutex
+    if (t_minaDisco != 0){
+        _exit(ERROR);
+    }
+    t_minaDisco = pthread_join(&minaDisco, NULL);
+    if (t_minaDisco != 0){
+        _exit(ERROR);
+    }
+
     //free(datos_disk);
     free(t_minaDisco);
     exit(EXIT_SUCCESS);
