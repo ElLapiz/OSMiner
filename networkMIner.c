@@ -6,6 +6,7 @@
 
 
 #define BUFFER_SIZE 1000
+#define ERROR -1
 
 typedef struct data data;
 
