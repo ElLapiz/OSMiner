@@ -40,7 +40,6 @@ int creaHijos(pid_t childPid, int argc, char **argv) {
     int i, choice;
 
     for (i = 1; i <= sizeof(argc); i++) {
-        //prctl(PR_SET_PDEATHSIG, SIGHUP);  //señal se envía cuando muere padre
         switch (childPid = fork()) {
             case -1:
                 return ERROR;

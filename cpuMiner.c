@@ -3,6 +3,7 @@
 #include "cpuMiner.h"
 #include "queue.h"
 #include "http.h"
+#include <signal.h>
 
 #define BUFFER_SIZE 1000
 #define ERROR -1
@@ -80,30 +81,34 @@ void syncAgregaDataCpu(long user, long nice, long system, long idle, long iowait
 //          hilos
 //------------------------------------------------------
 static void* minarDatosCpu(void *arg) {
-    int t;
 
-    t = pthread_mutex_lock(&cpu_lock); //Mutex
-    if (t != 0){
-        _exit(ERROR);
-    }
+        int t;
 
-    char buffer[BUFFER_SIZE];
-    char header[3];
-    long int user, nice,system, idle, iowait,irq, softirq, other1, other2, other3;
-    FILE * dato = fopen("/proc/stat", "r");
-    fgets(buffer, BUFFER_SIZE, dato);
-    sscanf(buffer,"%s %d %d %d %d %d %d %d %d %d %d", header, &user, &nice, &system, &idle, &iowait, &irq, &softirq, &other1 , &other2, &other3);
-    fclose(dato);
-    syncAgregaDataCpu(user, nice, system, idle, iowait, irq, softirq);
+        t = pthread_mutex_lock(&cpu_lock); //Mutex
+        if (t != 0){
+            _exit(ERROR);
+        }
 
-    t = pthread_mutex_unlock(&cpu_lock);
-    if (t != 0){
-        _exit(ERROR);
-    }
+        char buffer[BUFFER_SIZE];
+        char header[3];
+        long int user, nice,system, idle, iowait,irq, softirq, other1, other2, other3;
+
+        FILE * dato = fopen("/proc/stat", "r");
+        fgets(buffer, BUFFER_SIZE, dato);
+        sscanf(buffer,"%s %d %d %d %d %d %d %d %d %d %d", header, &user, &nice, &system, &idle, &iowait, &irq, &softirq, &other1 , &other2, &other3);
+        fclose(dato);
+        syncAgregaDataCpu(user, nice, system, idle, iowait, irq, softirq);
+
+        t = pthread_mutex_unlock(&cpu_lock);
+        if (t != 0){
+            _exit(ERROR);
+        }
+
 }
 
 void* enviarCpu(){
-    syncExtraeDataCpu(); //datos a convertir
+        sleep(1);//Esperar a que se llene la cola
+        syncExtraeDataCpu(); //datos a convertir
 }
 
 //----------------------------------------------------------
@@ -118,8 +123,6 @@ void collectCpuData(int numero) {
         if (miner_thread != 0){
             _exit(ERROR);
         }
-
-        sleep(1);//Esperar a que se llene la cola por primera vez
 
         /*
         s = pthread_create(&enviaCpu, NULL, enviarCpu, NULL);

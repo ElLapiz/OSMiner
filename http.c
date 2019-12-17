@@ -70,7 +70,6 @@ int send_http_post(char * resource, char * payload, char * contentType){
 }
 
 
-
 void publishData(long int value,  char id[16]){
 
     char buf[BUF_LEN] = {0};
@@ -90,7 +89,7 @@ void publishData(long int value,  char id[16]){
     snprintf(
             payload,
             4096,
-            "[{\"measurement\":\"Caguacates\",\"tags\":{\"host_name\":\"nuevoa\",\"miner_id\":\"%s\"},\"time\":\"%s\",\"captures\":{\"value\":%d}}]",
+            "[{\"measurement\":\"Caguacates\",\"tags\":{\"host_name\":\"myhost\",\"miner_id\":\"%s\"},\"time\":\"%s\",\"captures\":{\"value\":%d}}]",
             id,
             buf,
             value

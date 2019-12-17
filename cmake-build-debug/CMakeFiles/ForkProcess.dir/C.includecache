@@ -17,6 +17,8 @@ queue.h
 /home/bernalvm/Desktop/OSMiner/queue.h
 http.h
 /home/bernalvm/Desktop/OSMiner/http.h
+signal.h
+-
 
 /home/bernalvm/Desktop/OSMiner/cpuMiner.h
 stdio.h
