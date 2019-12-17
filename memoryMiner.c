@@ -8,7 +8,7 @@
 
 typedef struct data data;
 
-data datos[50];
+data datos_memory[50];
 
 char default_tag_memory[16] = "memory_metric";
 static pthread_mutex_t memory_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -26,7 +26,7 @@ struct data creaStructDataMemory(long int bytes) {
 data agregaDataMemory(long int bytes){
     pthread_mutex_lock(&memory_lock);  //bloquea datos_lock
     struct data info = creaStructDataMemory(bytes);
-    insert(info, datos);
+    insert(info, datos_memory);
     pthread_mutex_unlock(&memory_lock);  //desbloquea datos_lock
 }
 
@@ -75,7 +75,7 @@ static void* minarMemory(void *arg) {
 void extraeDataMemory(){
     pthread_mutex_lock(&memory_lock);  //bloquea datos_lock
     struct data data;
-    data = removeData(datos);
+    data = removeData(datos_memory);
     publishData(data.metric, data.tag); //Publica en el server
     pthread_mutex_unlock(&memory_lock);  //desbloquea datos_lock
 }
@@ -98,10 +98,10 @@ void* enviarMemory(void *arg){
 
 void collectMemData(int numero) {
     pthread_t minaMemoria, sendMemoria;
-    int s;
+    int t_minaMemoria;
 
-    s = pthread_create(&minaMemoria, NULL, minarMemory, NULL);
-    if (s != 0)
+    t_minaMemoria = pthread_create(&minaMemoria, NULL, minarMemory, NULL);
+    if (t_minaMemoria != 0)
         printf("Error creando hilo de mineria CPU");
 
     sleep(1);//Esperar a que se llene la cola por primera vez
@@ -113,7 +113,13 @@ void collectMemData(int numero) {
     */
 
     enviarMemory(1);
+
     pthread_mutex_destroy(&memory_lock); //destruye el mutex
+    pthread_join(&minaMemoria, NULL);
+    pthread_cancel(&minaMemoria);
+
+    free(datos_memory);
+    //free(t_minaMemoria);
     exit(EXIT_SUCCESS);
 
 }

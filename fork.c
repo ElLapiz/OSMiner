@@ -7,7 +7,6 @@
 #include <signal.h>
 #include <sys/prctl.h>   //Para señales POSIX
 #include <unistd.h>
-#include "queue.h"
 
 #define ERROR -1
 
@@ -34,15 +33,15 @@ void asignaTrabajo(int numero) {
         deafult:
             break;
     }
+    free(numero);
 }
 
 int creaHijos(pid_t childPid, int argc, char **argv) {
-    int i;
+    int i, choice;
 
     for (i = 1; i <= sizeof(argc); i++) {
-        prctl(PR_SET_PDEATHSIG, SIGHUP);  //señal se envía cuando muere padre
+        //prctl(PR_SET_PDEATHSIG, SIGHUP);  //señal se envía cuando muere padre
         switch (childPid = fork()) {
-            int choice;
             case -1:
                 return ERROR;
             case 0:
@@ -53,6 +52,5 @@ int creaHijos(pid_t childPid, int argc, char **argv) {
                 sleep(1);
                 break;
         }
-
     }
 }

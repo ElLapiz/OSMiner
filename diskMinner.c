@@ -8,7 +8,7 @@
 
 typedef struct data data;
 
-data datos[50];
+data datos_disk[50];
 
 char default_tag_disk[16] = "disk_metric";
 static pthread_mutex_t disk_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -26,7 +26,7 @@ struct data creaStructDisckData(long int total_activity) {
 data agregaDataDisk(long int total_activity){
     pthread_mutex_lock(&disk_lock);  //bloquea datos_lock
     struct data info = creaStructDisckData(total_activity);
-    insert(info, datos);
+    insert(info, datos_disk);
     pthread_mutex_unlock(&disk_lock);  //desbloquea datos_lock
 }
 
@@ -44,8 +44,7 @@ void syncAgregaDataDisco(long int total_activity) {
 //  Hilos
 //------------------------------------------
 static void* minarDisco(void *arg) {
-    int  s;
-    s = pthread_mutex_lock(&disk_lock); //Mutex
+   pthread_mutex_lock(&disk_lock); //Mutex
 
 
     char line[1024], valor3[10];
@@ -63,16 +62,13 @@ static void* minarDisco(void *arg) {
     syncAgregaDataDisco(total_activity);
     fclose(dato);
 
-    s = pthread_mutex_unlock(&disk_lock);
-    if (s != 0)
-        printf("Error desbloqueand mutex CPU");
-
+    pthread_mutex_unlock(&disk_lock);
 }
 
 void extraeDataDisco(){
     pthread_mutex_lock(&disk_lock);  //bloquea datos_lock
     struct data data;
-    data = removeData(datos);
+    data = removeData(datos_disk);
     publishData(data.metric, data.tag); //Publica en el server
     pthread_mutex_unlock(&disk_lock);  //desbloquea datos_lock
 }
@@ -94,10 +90,10 @@ void* envarDisco(void *arg){
 void collectDiskData(int numero) {
 
     pthread_t minaDisco, sendDisco;
-    int s;
+    int t_minaDisco;
 
-    s = pthread_create(&minaDisco, NULL, minarDisco, NULL);
-    if (s != 0)
+    t_minaDisco = pthread_create(&minaDisco, NULL, minarDisco, NULL);
+    if (t_minaDisco != 0)
         printf("Error creando hilo de mineria CPU");
 
     sleep(1);//Esperar a que se llene la cola por primera vez
@@ -109,6 +105,12 @@ void collectDiskData(int numero) {
     */
 
     envarDisco(1);
+
     pthread_mutex_destroy(&disk_lock); //destruye el mutex
+    pthread_join(&minaDisco, NULL);
+    pthread_cancel(&minaDisco);
+    //free(datos_disk);
+    free(t_minaDisco);
     exit(EXIT_SUCCESS);
+
 }

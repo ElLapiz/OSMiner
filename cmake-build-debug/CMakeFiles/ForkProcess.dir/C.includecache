@@ -59,8 +59,6 @@ sys/prctl.h
 -
 unistd.h
 -
-queue.h
-/home/bernalvm/Desktop/OSMiner/queue.h
 
 /home/bernalvm/Desktop/OSMiner/fork.h
 fork.c
