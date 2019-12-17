@@ -66,7 +66,6 @@ void syncAgregaData(long user, long nice, long system, long idle, long iowait, l
 //------------------------------------------------------
 //          hilos
 //------------------------------------------------------
-
 static void* minarDatos(void *arg) {
     int  s;
     s = pthread_mutex_lock(&datos_lock); //Mutex
@@ -79,7 +78,6 @@ static void* minarDatos(void *arg) {
     printf("%s \n", buffer);
     sscanf(buffer,"%s %d %d %d %d %d %d %d %d %d %d", header, &user, &nice, &system, &idle, &iowait, &irq, &softirq, &other1 , &other2, &other3);
     syncAgregaData(user, nice, system, idle, iowait, irq, softirq);
-    //get_average_idle_percentage(user, nice, system, idle, iowait, irq, softirq);
     fclose(dato);
 
     s = pthread_mutex_unlock(&datos_lock);
@@ -88,9 +86,7 @@ static void* minarDatos(void *arg) {
 }
 
 void* mandarJSON(void *arg){
-    printf("********************** En segundo hilo\n");
     syncExtraeData(); //datos a convertir
-    //publishData(98, "cpu_metric");
 }
 
 //----------------------------------------------------------
@@ -107,12 +103,13 @@ void collectCpuData(int numero) {
 
         sleep(1);//Esperar a que se llene la cola por primera vez
 
+        /*
         s = pthread_create(&mandaJson, NULL, mandarJSON, NULL);
         if (s != 0)
             printf("Error creando hilo de envio CPU");
+        */
 
-
+    mandarJSON(1);
     pthread_mutex_destroy(&datos_lock); //destruye el mutex
     exit(EXIT_SUCCESS);
-
 }
