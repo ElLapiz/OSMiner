@@ -89,42 +89,30 @@ static void* minarDatos(void *arg) {
 
 void* mandarJSON(void *arg){
     printf("********************** En segundo hilo\n");
-
     syncExtraeData(); //datos a convertir
+    //publishData(98, "cpu_metric");
 }
 
 //----------------------------------------------------------
 //Funcion principal
 //----------------------------------------------------------
 void collectCpuData(int numero) {
+
     pthread_t minaDatos, mandaJson;
-    int loops = 10, s;
+    int s;
 
-    //bool padre_vive = prctl(PR_GET_PDEATHSIG); //Recibe señal de muerte de padre
-
-    for(int i =0; i<1;i++){         //activa hilos
-
-        s = pthread_create(&minaDatos, NULL, minarDatos, &loops);
+        s = pthread_create(&minaDatos, NULL, minarDatos, NULL);
         if (s != 0)
             printf("Error creando hilo de mineria CPU");
 
-        sleep(1);
-        s = pthread_create(&mandaJson, NULL, mandarJSON, &loops);
+        sleep(1);//Esperar a que se llene la cola por primera vez
+
+        s = pthread_create(&mandaJson, NULL, mandarJSON, NULL);
         if (s != 0)
             printf("Error creando hilo de envio CPU");
 
-    }
-    pthread_mutex_destroy(&datos_lock); //destruye el mutex
 
+    pthread_mutex_destroy(&datos_lock); //destruye el mutex
     exit(EXIT_SUCCESS);
 
-
-    /*
-
-    while(padre_vive){         //activa hilos
-        pthread_create(&minaDatos, NULL , minaDatos , NULL);
-        pthread_create(&mandaJson, NULL , mandaJSON , NULL);
-    }
-    pthread_mutex_destroy(&datos_lock); //destruye el mutex
-*/
 }

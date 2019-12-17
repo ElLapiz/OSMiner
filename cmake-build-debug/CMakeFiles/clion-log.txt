@@ -1,4 +1,4 @@
-/snap/clion/98/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/intellign/Documents/bernaldo/OSMiner
+/snap/clion/98/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/bernalvm/Desktop/OSMiner
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/intellign/Documents/bernaldo/OSMiner/cmake-build-debug
+-- Build files have been written to: /home/bernalvm/Desktop/OSMiner/cmake-build-debug

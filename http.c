@@ -9,9 +9,11 @@
 int send_http_post(char * resource, char * payload, char * contentType){
 
     CURL* httpClient = curl_easy_init();
+
     CURLcode ret;
     int result = -1;
     struct curl_slist* headers;
+
 
     if(httpClient){
 
@@ -43,6 +45,7 @@ int send_http_post(char * resource, char * payload, char * contentType){
         curl_easy_setopt(httpClient, CURLOPT_POSTFIELDS, payload);
         curl_easy_setopt(httpClient, CURLOPT_POSTFIELDSIZE, strlen(payload));
         curl_easy_setopt(httpClient, CURLOPT_VERBOSE, 1L);
+
 
         // PERFORM POST OPERATION ------
         ret = curl_easy_perform(httpClient);
@@ -104,6 +107,7 @@ void publishData(long int value,  char id[16]){
             payload,
             "application/json"
     );
+
     printf("\n CODE: %d \n", result);
     printf("Sent! \n");
 }

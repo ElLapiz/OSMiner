@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/intellign/Documents/bernaldo/OSMiner/main.c" "/home/intellign/Documents/bernaldo/OSMiner/cmake-build-debug/CMakeFiles/ForkProcess.dir/main.c.o"
+  "/home/bernalvm/Desktop/OSMiner/main.c" "/home/bernalvm/Desktop/OSMiner/cmake-build-debug/CMakeFiles/ForkProcess.dir/main.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 
