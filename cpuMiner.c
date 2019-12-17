@@ -5,6 +5,7 @@
 #include "http.h"
 
 #define BUFFER_SIZE 1000
+#define ERROR -1
 
 typedef struct data data;
 
@@ -14,11 +15,20 @@ char default_tag[16] = "cpu_metric";
 static pthread_mutex_t cpu_lock = PTHREAD_MUTEX_INITIALIZER;
 
 void extraeDataCpu(){
-    pthread_mutex_lock(&cpu_lock);  //bloquea datos_lock
+    int t;
+    t = pthread_mutex_lock(&cpu_lock);  //bloquea datos_lock
+    if (t != 0){
+        _exit(ERROR);
+    }
+
     struct data data;
     data = removeData(datos_cpu);
     publishData(data.metric, data.tag); //Publica en el server
-    pthread_mutex_unlock(&cpu_lock);  //desbloquea datos_lock
+
+    t = pthread_mutex_unlock(&cpu_lock);  //desbloquea datos_lock
+    if (t != 0){
+        _exit(ERROR);
+    }
 }
 
 void syncExtraeDataCpu(){
@@ -42,10 +52,19 @@ struct data creaStructDataCpu(int user, int nice, int system, int idle, int iowa
 }
 
 data agregaDataCpu(long user, long nice, long system, long idle, long iowait, long irq, long softirq){
-    pthread_mutex_lock(&cpu_lock);  //bloquea datos_lock
+    int t;
+    t = pthread_mutex_lock(&cpu_lock);  //bloquea datos_lock
+    if (t != 0){
+        _exit(ERROR);
+    }
+
     struct data info = creaStructDataCpu(user, nice, system, idle, iowait, irq, softirq);
     insert(info, datos_cpu);
-    pthread_mutex_unlock(&cpu_lock);  //desbloquea datos_lock
+
+    t = pthread_mutex_unlock(&cpu_lock);  //desbloquea datos_lock
+    if (t != 0){
+        _exit(ERROR);
+    }
 }
 
 
@@ -61,7 +80,12 @@ void syncAgregaDataCpu(long user, long nice, long system, long idle, long iowait
 //          hilos
 //------------------------------------------------------
 static void* minarDatosCpu(void *arg) {
-    pthread_mutex_lock(&cpu_lock); //Mutex
+    int t;
+
+    t = pthread_mutex_lock(&cpu_lock); //Mutex
+    if (t != 0){
+        _exit(ERROR);
+    }
 
     char buffer[BUFFER_SIZE];
     char header[3];
@@ -72,7 +96,10 @@ static void* minarDatosCpu(void *arg) {
     syncAgregaDataCpu(user, nice, system, idle, iowait, irq, softirq);
     fclose(dato);
 
-    pthread_mutex_unlock(&cpu_lock);
+    t = pthread_mutex_unlock(&cpu_lock);
+    if (t != 0){
+        _exit(ERROR);
+    }
 }
 
 void* enviarCpu(){
@@ -88,22 +115,31 @@ void collectCpuData(int numero) {
     int miner_thread;
 
     miner_thread = pthread_create(&minaDatosCpu, NULL, minarDatosCpu, NULL);
-        if (miner_thread != 0)
-            printf("Error creando hilo de mineria CPU");
+        if (miner_thread != 0){
+            _exit(ERROR);
+        }
 
         sleep(1);//Esperar a que se llene la cola por primera vez
 
         /*
         s = pthread_create(&enviaCpu, NULL, enviarCpu, NULL);
-        if (s != 0)
-            printf("Error creando hilo de envio CPU");
+        if (t != 0){
+            _exit(ERROR);
+        }
         */
 
     enviarCpu();
 
     //Clean
-    pthread_mutex_destroy(&cpu_lock); //destruye el mutex
-    pthread_join(&minaDatosCpu, NULL);
+    miner_thread = pthread_mutex_destroy(&cpu_lock); //destruye el mutex
+    if (miner_thread != 0){
+        _exit(ERROR);
+    }
+    miner_thread = pthread_join(&minaDatosCpu, NULL);
+    if (miner_thread != 0){
+        _exit(ERROR);
+    }
+
     free(miner_thread);
     //free(datos_cpu);
     exit(EXIT_SUCCESS);
