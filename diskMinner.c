@@ -108,7 +108,6 @@ void collectDiskData(int numero) {
 
     pthread_mutex_destroy(&disk_lock); //destruye el mutex
     pthread_join(&minaDisco, NULL);
-    pthread_cancel(&minaDisco);
     //free(datos_disk);
     free(t_minaDisco);
     exit(EXIT_SUCCESS);

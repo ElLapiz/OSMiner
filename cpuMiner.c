@@ -104,7 +104,6 @@ void collectCpuData(int numero) {
     //Clean
     pthread_mutex_destroy(&cpu_lock); //destruye el mutex
     pthread_join(&minaDatosCpu, NULL);
-    pthread_cancel(&minaDatosCpu);
     free(miner_thread);
     //free(datos_cpu);
     exit(EXIT_SUCCESS);

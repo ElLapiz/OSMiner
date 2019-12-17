@@ -116,8 +116,6 @@ void collectMemData(int numero) {
 
     pthread_mutex_destroy(&memory_lock); //destruye el mutex
     pthread_join(&minaMemoria, NULL);
-    pthread_cancel(&minaMemoria);
-
     free(datos_memory);
     //free(t_minaMemoria);
     exit(EXIT_SUCCESS);

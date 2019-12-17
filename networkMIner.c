@@ -112,7 +112,6 @@ void collectNetData(int numero) {
 
     pthread_mutex_destroy(&network_lock); //destruye el mutex
     pthread_join(&minaNetwork, NULL);
-    pthread_cancel(&minaNetwork);
     free(datos_net);
     //free(t_minaNetwork);
     exit(EXIT_SUCCESS);
