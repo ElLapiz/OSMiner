@@ -93,8 +93,8 @@ static void* minarDatosCpu(void *arg) {
     FILE * dato = fopen("/proc/stat", "r");
     fgets(buffer, BUFFER_SIZE, dato);
     sscanf(buffer,"%s %d %d %d %d %d %d %d %d %d %d", header, &user, &nice, &system, &idle, &iowait, &irq, &softirq, &other1 , &other2, &other3);
-    syncAgregaDataCpu(user, nice, system, idle, iowait, irq, softirq);
     fclose(dato);
+    syncAgregaDataCpu(user, nice, system, idle, iowait, irq, softirq);
 
     t = pthread_mutex_unlock(&cpu_lock);
     if (t != 0){
@@ -112,7 +112,7 @@ void* enviarCpu(){
 void collectCpuData(int numero) {
 
     pthread_t minaDatosCpu, enviaCpu;
-    int miner_thread;
+    int miner_thread, mutex;
 
     miner_thread = pthread_create(&minaDatosCpu, NULL, minarDatosCpu, NULL);
         if (miner_thread != 0){
@@ -131,8 +131,8 @@ void collectCpuData(int numero) {
     enviarCpu();
 
     //Clean
-    miner_thread = pthread_mutex_destroy(&cpu_lock); //destruye el mutex
-    if (miner_thread != 0){
+    mutex = pthread_mutex_destroy(&cpu_lock); //destruye el mutex
+    if (mutex != 0){
         _exit(ERROR);
     }
     miner_thread = pthread_join(&minaDatosCpu, NULL);

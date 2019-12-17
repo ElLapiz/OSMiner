@@ -24,10 +24,19 @@ struct data creaStructDataMemory(long int bytes) {
 }
 
 data agregaDataMemory(long int bytes){
-    pthread_mutex_lock(&memory_lock);  //bloquea datos_lock
+    int t;
+    t = pthread_mutex_lock(&memory_lock);  //bloquea datos_lock
+    if (t != 0){
+        _exit(ERROR);
+    }
+
     struct data info = creaStructDataMemory(bytes);
     insert(info, datos_memory);
-    pthread_mutex_unlock(&memory_lock);  //desbloquea datos_lock
+
+    t = pthread_mutex_unlock(&memory_lock);  //desbloquea datos_lock
+    if (t != 0){
+        _exit(ERROR);
+    }
 }
 
 
@@ -44,13 +53,13 @@ void syncAgregaDataMemory(long int bytes) {
 //  Hilos
 //------------------------------------------
 static void* minarMemory(void *arg) {
-    int  s;
-    s = pthread_mutex_lock(&memory_lock); //Mutex
-
-
+    int  t;
+    t = pthread_mutex_lock(&memory_lock); //Mutex
+    if (t != 0){
+        _exit(ERROR);
+    }
 
     FILE *ramInfo = fopen("/proc/meminfo", "r");
-
     char kb[2], header[10],  line[1024];
     long int memTotal, value[2], memory_idle;
 
@@ -61,23 +70,30 @@ static void* minarMemory(void *arg) {
         value[i] = memTotal;
     }
 
+    fclose(ramInfo);
     memory_idle = (value[1] * 100) / value[2];
     syncAgregaDataMemory(memory_idle);
-
-    fclose(ramInfo);
-
-    s = pthread_mutex_unlock(&memory_lock);
-    if (s != 0)
-        printf("Error desbloqueand mutex CPU");
-
+    t = pthread_mutex_unlock(&memory_lock);
+    if (t != 0){
+        _exit(ERROR);
+    }
 }
 
 void extraeDataMemory(){
-    pthread_mutex_lock(&memory_lock);  //bloquea datos_lock
+    int t;
+    t = pthread_mutex_lock(&memory_lock);  //bloquea datos_lock
+    if (t != 0){
+        _exit(ERROR);
+    }
+
     struct data data;
     data = removeData(datos_memory);
     publishData(data.metric, data.tag); //Publica en el server
-    pthread_mutex_unlock(&memory_lock);  //desbloquea datos_lock
+
+    t = pthread_mutex_unlock(&memory_lock);  //desbloquea datos_lock
+    if (t != 0){
+        _exit(ERROR);
+    }
 }
 
 void syncExtraeDataMemory(){
@@ -98,12 +114,12 @@ void* enviarMemory(void *arg){
 
 void collectMemData(int numero) {
     pthread_t minaMemoria, sendMemoria;
-    int t_minaMemoria;
+    int t_minaMemoria, mutex;
 
     t_minaMemoria = pthread_create(&minaMemoria, NULL, minarMemory, NULL);
-    if (t_minaMemoria != 0)
-        printf("Error creando hilo de mineria CPU");
-
+    if (t_minaMemoria != 0){
+        _exit(ERROR);
+    }
     sleep(1);//Esperar a que se llene la cola por primera vez
 
     /*
@@ -114,8 +130,15 @@ void collectMemData(int numero) {
 
     enviarMemory(1);
 
-    pthread_mutex_destroy(&memory_lock); //destruye el mutex
-    pthread_join(&minaMemoria, NULL);
+    mutex = pthread_mutex_destroy(&memory_lock); //destruye el mutex
+    if (mutex != 0){
+        _exit(ERROR);
+    }
+
+    t_minaMemoria = pthread_join(&minaMemoria, NULL);
+    if (t_minaMemoria != 0){
+        _exit(ERROR);
+    }
     free(datos_memory);
     //free(t_minaMemoria);
     exit(EXIT_SUCCESS);

@@ -70,10 +70,9 @@ static void* minarDisco(void *arg) {
         reads_sum += reads;
         lectures_sum += lectures;
     }
-    total_activity = reads_sum + lectures_sum;
-
-    syncAgregaDataDisco(total_activity);
     fclose(dato);
+    total_activity = reads_sum + lectures_sum;
+    syncAgregaDataDisco(total_activity);
 
     t = pthread_mutex_unlock(&disk_lock);
     if (t != 0){
@@ -115,7 +114,7 @@ void* envarDisco(void *arg){
 void collectDiskData(int numero) {
 
     pthread_t minaDisco, sendDisco;
-    int t_minaDisco;
+    int t_minaDisco, mutex;
 
     t_minaDisco = pthread_create(&minaDisco, NULL, minarDisco, NULL);
     if (t_minaDisco != 0){
@@ -132,8 +131,8 @@ void collectDiskData(int numero) {
 
     envarDisco(1);
 
-    t_minaDisco = pthread_mutex_destroy(&disk_lock); //destruye el mutex
-    if (t_minaDisco != 0){
+    mutex = pthread_mutex_destroy(&disk_lock); //destruye el mutex
+    if (mutex != 0){
         _exit(ERROR);
     }
     t_minaDisco = pthread_join(&minaDisco, NULL);
