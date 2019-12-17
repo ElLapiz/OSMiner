@@ -140,7 +140,7 @@ void collectCpuData(int numero) {
         _exit(ERROR);
     }
 
+    free(mutex);
     free(miner_thread);
-    //free(datos_cpu);
     exit(EXIT_SUCCESS);
 }

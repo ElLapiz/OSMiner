@@ -140,7 +140,7 @@ void collectMemData(int numero) {
         _exit(ERROR);
     }
     free(datos_memory);
-    //free(t_minaMemoria);
+    free(mutex);
     exit(EXIT_SUCCESS);
 
 }

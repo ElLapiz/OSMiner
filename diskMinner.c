@@ -140,7 +140,7 @@ void collectDiskData(int numero) {
         _exit(ERROR);
     }
 
-    //free(datos_disk);
+    free(mutex);
     free(t_minaDisco);
     exit(EXIT_SUCCESS);
 

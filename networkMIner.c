@@ -25,10 +25,19 @@ struct data creaStructDataNetwork(long int total_activity) {
 }
 
 data agregaDataNetwork(long int total_activity){
-    pthread_mutex_lock(&network_lock);  //bloquea datos_lock
+    int t;
+    t = pthread_mutex_lock(&network_lock);  //bloquea datos_lock
+    if (t != 0){
+        _exit(ERROR);
+    }
+
     struct data info = creaStructDataNetwork(total_activity);
     insert(info, datos_net);
-    pthread_mutex_unlock(&network_lock);  //desbloquea datos_lock
+
+    t = pthread_mutex_unlock(&network_lock);  //desbloquea datos_lock
+    if (t != 0){
+        _exit(ERROR);
+    }
 }
 
 
@@ -45,8 +54,11 @@ void syncAgregaDataNetwork(long int total_activity) {
 //  Hilos
 //------------------------------------------
 static void* minarNetwork(void *arg) {
-    int  s;
-    s = pthread_mutex_lock(&network_lock); //Mutex
+    int  t;
+    t = pthread_mutex_lock(&network_lock); //Mutex
+    if (t != 0){
+        _exit(ERROR);
+    }
 
     char line[1024], header[10];
     long int bytes;
@@ -58,22 +70,30 @@ static void* minarNetwork(void *arg) {
         printf("%s \n", line);
         sscanf(line,"%s %d ", header, &bytes);
     }
-
-    syncAgregaDataNetwork(bytes);
     fclose(dato);
+    syncAgregaDataNetwork(bytes);
 
-    s = pthread_mutex_unlock(&network_lock);
-    if (s != 0)
-        printf("Error desbloqueand mutex CPU");
-
+    t = pthread_mutex_unlock(&network_lock);
+    if (t != 0){
+        _exit(ERROR);
+    }
 }
 
 void extraeDataNetwork(){
-    pthread_mutex_lock(&network_lock);  //bloquea datos_lock
+    int t;
+    t = pthread_mutex_lock(&network_lock);  //bloquea datos_lock
+    if (t != 0){
+        _exit(ERROR);
+    }
+
     struct data data;
     data = removeData(datos_net);
     publishData(data.metric, data.tag); //Publica en el server
-    pthread_mutex_unlock(&network_lock);  //desbloquea datos_lock
+
+    t = pthread_mutex_unlock(&network_lock);  //desbloquea datos_lock
+    if (t != 0){
+        _exit(ERROR);
+    }
 }
 
 void syncExtraeDataNetwork(){
@@ -94,11 +114,12 @@ void* enviarNetwork(void *arg){
 void collectNetData(int numero) {
 
     pthread_t minaNetwork, sendNetwork;
-    int t_minaNetwork;
+    int t_minaNetwork, mutex;
 
     t_minaNetwork = pthread_create(&minaNetwork, NULL, minarNetwork, NULL);
-    if (t_minaNetwork != 0)
-        printf("Error creando hilo de mineria CPU");
+    if (t_minaNetwork != 0){
+        _exit(ERROR);
+    }
 
     sleep(1);//Esperar a que se llene la cola por primera vez
 
@@ -110,10 +131,18 @@ void collectNetData(int numero) {
 
     enviarNetwork(1);
 
-    pthread_mutex_destroy(&network_lock); //destruye el mutex
-    pthread_join(&minaNetwork, NULL);
-    free(datos_net);
-    //free(t_minaNetwork);
+    mutex = pthread_mutex_destroy(&network_lock); //destruye el mutex
+    if (mutex != 0){
+        _exit(ERROR);
+    }
+
+    t_minaNetwork = pthread_join(&minaNetwork, NULL);
+    if (t_minaNetwork != 0){
+        _exit(ERROR);
+    }
+
+    free(mutex);
+    free(t_minaNetwork);
     exit(EXIT_SUCCESS);
 
 }
