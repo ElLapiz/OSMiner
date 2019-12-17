@@ -1,10 +1,52 @@
 #include "networkMIner.h"
+#include <pthread.h>
+#include <sys/prctl.h>
+#include "queue.h"
+#include "http.h"
 
-void imprimeHijoRed(int numero) {
-    printf("Id proceso red: %d\n", (numero + 1));
+
+#define BUFFER_SIZE 1000
+
+typedef struct data data;
+
+data datos[50];
+
+char default_tag_network[16] = "network_metric";
+static pthread_mutex_t network_lock = PTHREAD_MUTEX_INITIALIZER;
+
+//------------------------------------------
+//  Metodos sender
+//------------------------------------------
+struct data creaStructDataNetwork(long int total_activity) {
+    struct data percentaje;
+    percentaje.metric = total_activity;
+    percentaje.tag = &default_tag_network;
+    return percentaje;
 }
 
-void collectNetData(int numero) {
+data agregaDataNetwork(long int total_activity){
+    pthread_mutex_lock(&network_lock);  //bloquea datos_lock
+    struct data info = creaStructDataNetwork(total_activity);
+    insert(info, datos);
+    pthread_mutex_unlock(&network_lock);  //desbloquea datos_lock
+}
+
+
+void syncAgregaDataNetwork(long int total_activity) {
+    if (pthread_mutex_init(&network_lock, NULL) != 0){
+        sleep(1);
+    } else {
+        agregaDataNetwork(total_activity);
+    }
+}
+
+
+//------------------------------------------
+//  Hilos
+//------------------------------------------
+static void* minarNetwork(void *arg) {
+    int  s;
+    s = pthread_mutex_lock(&network_lock); //Mutex
 
     char line[1024], header[10];
     long int bytes;
@@ -16,11 +58,59 @@ void collectNetData(int numero) {
         printf("%s \n", line);
         sscanf(line,"%s %d ", header, &bytes);
     }
-    printf("************************************************************************************************* \n");
-    imprimeHijoRed(numero);
-    printf("Cantidad de bytes transmitidos y recibidos: %d \n", bytes);
-    printf("************************************************************************************************* \n");
-    publishData(bytes, "network_metric");
 
+    syncAgregaDataNetwork(bytes);
     fclose(dato);
+
+    s = pthread_mutex_unlock(&network_lock);
+    if (s != 0)
+        printf("Error desbloqueand mutex CPU");
+
+}
+
+void extraeDataNetwork(){
+    pthread_mutex_lock(&network_lock);  //bloquea datos_lock
+    struct data data;
+    data = removeData(datos);
+    publishData(data.metric, data.tag); //Publica en el server
+    pthread_mutex_unlock(&network_lock);  //desbloquea datos_lock
+}
+
+void syncExtraeDataNetwork(){
+    if (pthread_mutex_init(&network_lock, NULL) != 0)
+    {
+        sleep(500);
+    }else {
+        extraeDataNetwork();
+    }
+}
+
+
+void* enviarNetwork(void *arg){
+    syncExtraeDataNetwork(); //datos a convertir
+}
+
+
+void collectNetData(int numero) {
+
+    pthread_t minaNetwork, sendNetwork;
+    int s;
+
+    s = pthread_create(&minaNetwork, NULL, minarNetwork, NULL);
+    if (s != 0)
+        printf("Error creando hilo de mineria CPU");
+
+    sleep(1);//Esperar a que se llene la cola por primera vez
+
+    /*
+    s = pthread_create(&sendNetwork, NULL, enviarNetwork, NULL);
+    if (s != 0)
+        printf("Error creando hilo de envio CPU");
+    */
+
+    enviarNetwork(1);
+    pthread_mutex_destroy(&memory_lock); //destruye el mutex
+    exit(EXIT_SUCCESS);
+
+
 }

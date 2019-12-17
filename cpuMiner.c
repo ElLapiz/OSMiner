@@ -3,7 +3,6 @@
 #include "cpuMiner.h"
 #include "queue.h"
 #include "http.h"
-#include "tlpi_hdr.h"
 
 #define BUFFER_SIZE 1000
 
@@ -12,23 +11,23 @@ typedef struct data data;
 data datos[50];
 
 char default_tag[16] = "cpu_metric";
-static pthread_mutex_t datos_lock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t cpu_lock = PTHREAD_MUTEX_INITIALIZER;
 
 
-void extraeData(){
-    pthread_mutex_lock(&datos_lock);  //bloquea datos_lock
+void extraeDataCpu(){
+    pthread_mutex_lock(&cpu_lock);  //bloquea datos_lock
     struct data data;
     data = removeData(datos);
     publishData(data.metric, data.tag); //Publica en el server
-    pthread_mutex_unlock(&datos_lock);  //desbloquea datos_lock
+    pthread_mutex_unlock(&cpu_lock);  //desbloquea datos_lock
 }
 
-void syncExtraeData(){
-    if (pthread_mutex_init(&datos_lock, NULL) != 0)
+void syncExtraeDataCpu(){
+    if (pthread_mutex_init(&cpu_lock, NULL) != 0)
     {
         sleep(500);
     }else {
-        extraeData();
+        extraeDataCpu();
     }
 }
 
@@ -39,36 +38,35 @@ int get_average_idle_percentage(int user, int nice, int system, int idle, int io
     return average_idle;
 }
 
-struct data creaStructData(int user, int nice, int system, int idle, int iowait, int irq, int softirq) {
+struct data creaStructDataCpu(int user, int nice, int system, int idle, int iowait, int irq, int softirq) {
     struct data percentaje;
     percentaje.metric = get_average_idle_percentage(user, nice, system, idle, iowait, irq, softirq);
     percentaje.tag = &default_tag;
     return percentaje;
 }
 
-data agregaData(long user, long nice, long system, long idle, long iowait, long irq, long softirq){
-    pthread_mutex_lock(&datos_lock);  //bloquea datos_lock
-    struct data info = creaStructData(user, nice, system, idle, iowait, irq, softirq);
+data agregaDataCpu(long user, long nice, long system, long idle, long iowait, long irq, long softirq){
+    pthread_mutex_lock(&cpu_lock);  //bloquea datos_lock
+    struct data info = creaStructDataCpu(user, nice, system, idle, iowait, irq, softirq);
     insert(info, datos);
-    pthread_mutex_unlock(&datos_lock);  //desbloquea datos_lock
+    pthread_mutex_unlock(&cpu_lock);  //desbloquea datos_lock
 }
 
 
-void syncAgregaData(long user, long nice, long system, long idle, long iowait, long irq, long softirq) {
-    if (pthread_mutex_init(&datos_lock, NULL) != 0){
+void syncAgregaDataCpu(long user, long nice, long system, long idle, long iowait, long irq, long softirq) {
+    if (pthread_mutex_init(&cpu_lock, NULL) != 0){
         sleep(1);
     } else {
-        agregaData(user, nice, system, idle, iowait, irq, softirq);
+        agregaDataCpu(user, nice, system, idle, iowait, irq, softirq);
     }
 }
-
 
 //------------------------------------------------------
 //          hilos
 //------------------------------------------------------
-static void* minarDatos(void *arg) {
+static void* minarDatosCpu(void *arg) {
     int  s;
-    s = pthread_mutex_lock(&datos_lock); //Mutex
+    s = pthread_mutex_lock(&cpu_lock); //Mutex
 
     char buffer[BUFFER_SIZE];
     char header[3];
@@ -77,16 +75,16 @@ static void* minarDatos(void *arg) {
     fgets(buffer, BUFFER_SIZE, dato);
     printf("%s \n", buffer);
     sscanf(buffer,"%s %d %d %d %d %d %d %d %d %d %d", header, &user, &nice, &system, &idle, &iowait, &irq, &softirq, &other1 , &other2, &other3);
-    syncAgregaData(user, nice, system, idle, iowait, irq, softirq);
+    syncAgregaDataCpu(user, nice, system, idle, iowait, irq, softirq);
     fclose(dato);
 
-    s = pthread_mutex_unlock(&datos_lock);
+    s = pthread_mutex_unlock(&cpu_lock);
     if (s != 0)
         printf("Error desbloqueand mutex CPU");
 }
 
-void* mandarJSON(void *arg){
-    syncExtraeData(); //datos a convertir
+void* enviarCpu(void *arg){
+    syncExtraeDataCpu(); //datos a convertir
 }
 
 //----------------------------------------------------------
@@ -94,22 +92,22 @@ void* mandarJSON(void *arg){
 //----------------------------------------------------------
 void collectCpuData(int numero) {
 
-    pthread_t minaDatos, mandaJson;
+    pthread_t minaDatosCpu, enviaCpu;
     int s;
 
-        s = pthread_create(&minaDatos, NULL, minarDatos, NULL);
+        s = pthread_create(&minaDatosCpu, NULL, minarDatosCpu, NULL);
         if (s != 0)
             printf("Error creando hilo de mineria CPU");
 
         sleep(1);//Esperar a que se llene la cola por primera vez
 
         /*
-        s = pthread_create(&mandaJson, NULL, mandarJSON, NULL);
+        s = pthread_create(&enviaCpu, NULL, enviaDisco, NULL);
         if (s != 0)
             printf("Error creando hilo de envio CPU");
         */
 
-    mandarJSON(1);
-    pthread_mutex_destroy(&datos_lock); //destruye el mutex
+    enviarCpu(1);
+    pthread_mutex_destroy(&cpu_lock); //destruye el mutex
     exit(EXIT_SUCCESS);
 }

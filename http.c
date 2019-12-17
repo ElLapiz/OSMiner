@@ -90,7 +90,7 @@ void publishData(long int value,  char id[16]){
     snprintf(
             payload,
             4096,
-            "[{\"measurement\":\"Caguacates\",\"tags\":{\"host_name\":\"bernalvm\",\"miner_id\":\"%s\"},\"time\":\"%s\",\"captures\":{\"value\":%d}}]",
+            "[{\"measurement\":\"Caguacates\",\"tags\":{\"host_name\":\"bernal\",\"miner_id\":\"%s\"},\"time\":\"%s\",\"captures\":{\"value\":%d}}]",
             id,
             buf,
             value

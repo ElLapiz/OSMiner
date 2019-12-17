@@ -1,11 +1,53 @@
 #include "memoryMiner.h"
+#include <pthread.h>
+#include <sys/prctl.h>
+#include "queue.h"
 #include "http.h"
 
-void imprimeHijoMemoria(int numero) {
-    printf("Id proceso memoria: %d\n", (numero + 1));
+#define BUFFER_SIZE 1000
+
+typedef struct data data;
+
+data datos[50];
+
+char default_tag_memory[16] = "memory_metric";
+static pthread_mutex_t memory_lock = PTHREAD_MUTEX_INITIALIZER;
+
+//------------------------------------------
+//  Metodos sender
+//------------------------------------------
+struct data creaStructDataMemory(long int bytes) {
+    struct data percentaje;
+    percentaje.metric = bytes;
+    percentaje.tag = &default_tag_memory;
+    return percentaje;
 }
 
-void collectMemData(int numero) {
+data agregaDataMemory(long int bytes){
+    pthread_mutex_lock(&memory_lock);  //bloquea datos_lock
+    struct data info = creaStructDataMemory(bytes);
+    insert(info, datos);
+    pthread_mutex_unlock(&memory_lock);  //desbloquea datos_lock
+}
+
+
+void syncAgregaDataMemory(long int bytes) {
+    if (pthread_mutex_init(&memory_lock, NULL) != 0){
+        sleep(1);
+    } else {
+        agregaDataMemory(bytes);
+    }
+}
+
+
+//------------------------------------------
+//  Hilos
+//------------------------------------------
+static void* minarMemory(void *arg) {
+    int  s;
+    s = pthread_mutex_lock(&memory_lock); //Mutex
+
+
 
     FILE *ramInfo = fopen("/proc/meminfo", "r");
 
@@ -20,12 +62,58 @@ void collectMemData(int numero) {
     }
 
     memory_idle = (value[1] * 100) / value[2];
-
-    printf("************************************************************************************************* \n");
-    imprimeHijoMemoria(numero);
-    printf("Memoria disponible: %d % \n", memory_idle);
-    printf("************************************************************************************************* \n");
-    publishData(memory_idle, "memory_metric");
+    syncAgregaDataMemory(memory_idle);
 
     fclose(ramInfo);
+
+    s = pthread_mutex_unlock(&memory_lock);
+    if (s != 0)
+        printf("Error desbloqueand mutex CPU");
+
+}
+
+void extraeDataMemory(){
+    pthread_mutex_lock(&memory_lock);  //bloquea datos_lock
+    struct data data;
+    data = removeData(datos);
+    publishData(data.metric, data.tag); //Publica en el server
+    pthread_mutex_unlock(&memory_lock);  //desbloquea datos_lock
+}
+
+void syncExtraeDataMemory(){
+    if (pthread_mutex_init(&memory_lock, NULL) != 0)
+    {
+        sleep(500);
+    }else {
+        extraeDataMemory();
+    }
+}
+
+
+void* enviarMemory(void *arg){
+    syncExtraeDataMemory(); //datos a convertir
+}
+
+
+
+void collectMemData(int numero) {
+    pthread_t minaMemoria, sendMemoria;
+    int s;
+
+    s = pthread_create(&minaMemoria, NULL, minarMemory, NULL);
+    if (s != 0)
+        printf("Error creando hilo de mineria CPU");
+
+    sleep(1);//Esperar a que se llene la cola por primera vez
+
+    /*
+    s = pthread_create(&sendMemoria, NULL, enviarMemory, NULL);
+    if (s != 0)
+        printf("Error creando hilo de envio CPU");
+    */
+
+    enviarMemory(1);
+    pthread_mutex_destroy(&memory_lock); //destruye el mutex
+    exit(EXIT_SUCCESS);
+
 }

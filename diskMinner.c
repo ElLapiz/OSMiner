@@ -1,14 +1,55 @@
 #include "diskMinner.h"
+#include <pthread.h>
+#include <sys/prctl.h>
+#include "queue.h"
+#include "http.h"
 
-void imprimeHijoDisk(int numero) {
-    printf("Id proceso disco: %d\n", (numero + 1));
+#define BUFFER_SIZE 1000
+
+typedef struct data data;
+
+data datos[50];
+
+char default_tag_disk[16] = "disk_metric";
+static pthread_mutex_t disk_lock = PTHREAD_MUTEX_INITIALIZER;
+
+//------------------------------------------
+//  Metodos sender
+//------------------------------------------
+struct data creaStructDisckData(long int total_activity) {
+    struct data percentaje;
+    percentaje.metric = total_activity;
+    percentaje.tag = &default_tag_disk;
+    return percentaje;
 }
 
-void collectDiskData(int numero) {
+data agregaDataDisk(long int total_activity){
+    pthread_mutex_lock(&disk_lock);  //bloquea datos_lock
+    struct data info = creaStructDisckData(total_activity);
+    insert(info, datos);
+    pthread_mutex_unlock(&disk_lock);  //desbloquea datos_lock
+}
+
+
+void syncAgregaDataDisco(long int total_activity) {
+    if (pthread_mutex_init(&disk_lock, NULL) != 0){
+        sleep(1);
+    } else {
+        agregaDataDisk(total_activity);
+    }
+}
+
+
+//------------------------------------------
+//  Hilos
+//------------------------------------------
+static void* minarDisco(void *arg) {
+    int  s;
+    s = pthread_mutex_lock(&disk_lock); //Mutex
+
 
     char line[1024], valor3[10];
     long int valor1, valor2, reads, valor5, valor6, valor7, lectures, reads_sum, lectures_sum, total_activity;
-
     FILE * dato = fopen("/proc/diskstats", "r");
 
     for (int i = 0; i < 17; ++i) {
@@ -17,13 +58,57 @@ void collectDiskData(int numero) {
         reads_sum += reads;
         lectures_sum += lectures;
     }
-
     total_activity = reads_sum + lectures_sum;
-    printf("************************************************************************************************* \n");
-    imprimeHijoDisk(numero);
-    printf("La antidad de actividad de IO en el disco es un total de: %d \n", total_activity);
-    printf("************************************************************************************************* \n");
-    publishData(total_activity, "disk_metric");
 
+    syncAgregaDataDisco(total_activity);
     fclose(dato);
+
+    s = pthread_mutex_unlock(&disk_lock);
+    if (s != 0)
+        printf("Error desbloqueand mutex CPU");
+
+}
+
+void extraeDataDisco(){
+    pthread_mutex_lock(&disk_lock);  //bloquea datos_lock
+    struct data data;
+    data = removeData(datos);
+    publishData(data.metric, data.tag); //Publica en el server
+    pthread_mutex_unlock(&disk_lock);  //desbloquea datos_lock
+}
+
+void syncExtraeDataDisco(){
+    if (pthread_mutex_init(&disk_lock, NULL) != 0)
+    {
+        sleep(500);
+    }else {
+        extraeDataDisco();
+    }
+}
+
+
+void* envarDisco(void *arg){
+    syncExtraeDataDisco(); //datos a convertir
+}
+
+void collectDiskData(int numero) {
+
+    pthread_t minaDisco, sendDisco;
+    int s;
+
+    s = pthread_create(&minaDisco, NULL, minarDisco, NULL);
+    if (s != 0)
+        printf("Error creando hilo de mineria CPU");
+
+    sleep(1);//Esperar a que se llene la cola por primera vez
+
+    /*
+    s = pthread_create(&mandaJson, NULL, sendDisco, NULL);
+    if (s != 0)
+        printf("Error creando hilo de envio CPU");
+    */
+
+    envarDisco(1);
+    pthread_mutex_destroy(&disk_lock); //destruye el mutex
+    exit(EXIT_SUCCESS);
 }

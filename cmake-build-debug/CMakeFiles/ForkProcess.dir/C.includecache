@@ -17,8 +17,6 @@ queue.h
 /home/bernalvm/Desktop/OSMiner/queue.h
 http.h
 /home/bernalvm/Desktop/OSMiner/http.h
-tlpi_hdr.h
-/home/bernalvm/Desktop/OSMiner/tlpi_hdr.h
 
 /home/bernalvm/Desktop/OSMiner/cpuMiner.h
 stdio.h
@@ -29,6 +27,14 @@ cpuMiner.c
 /home/bernalvm/Desktop/OSMiner/diskMinner.c
 diskMinner.h
 /home/bernalvm/Desktop/OSMiner/diskMinner.h
+pthread.h
+-
+sys/prctl.h
+-
+queue.h
+/home/bernalvm/Desktop/OSMiner/queue.h
+http.h
+/home/bernalvm/Desktop/OSMiner/http.h
 
 /home/bernalvm/Desktop/OSMiner/diskMinner.h
 stdio.h
@@ -87,6 +93,12 @@ fork.h
 /home/bernalvm/Desktop/OSMiner/memoryMiner.c
 memoryMiner.h
 /home/bernalvm/Desktop/OSMiner/memoryMiner.h
+pthread.h
+-
+sys/prctl.h
+-
+queue.h
+/home/bernalvm/Desktop/OSMiner/queue.h
 http.h
 /home/bernalvm/Desktop/OSMiner/http.h
 
@@ -99,6 +111,14 @@ stdio.h
 /home/bernalvm/Desktop/OSMiner/networkMIner.c
 networkMIner.h
 /home/bernalvm/Desktop/OSMiner/networkMIner.h
+pthread.h
+-
+sys/prctl.h
+-
+queue.h
+/home/bernalvm/Desktop/OSMiner/queue.h
+http.h
+/home/bernalvm/Desktop/OSMiner/http.h
 
 /home/bernalvm/Desktop/OSMiner/networkMIner.h
 networkMIner.c
@@ -120,23 +140,5 @@ string.h
 stdlib.h
 -
 stdbool.h
--
-
-/home/bernalvm/Desktop/OSMiner/tlpi_hdr.h
-sys/types.h
--
-stdio.h
--
-stdlib.h
--
-unistd.h
--
-errno.h
--
-string.h
--
-stdbool.h
--
-sys/file.h
 -
 
