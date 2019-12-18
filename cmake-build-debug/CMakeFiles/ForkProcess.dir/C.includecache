@@ -19,6 +19,8 @@ http.h
 /home/bernalvm/Desktop/OSMiner/http.h
 signal.h
 -
+curl/curl.h
+-
 
 /home/bernalvm/Desktop/OSMiner/cpuMiner.h
 stdio.h

@@ -53,6 +53,9 @@ void syncAgregaDataMemory(long int bytes) {
 //  Hilos
 //------------------------------------------
 static void* minarMemory(void *arg) {
+
+    //sleep(300); //Cada cuanto envia
+
     int  t;
     t = pthread_mutex_lock(&memory_lock); //Mutex
     if (t != 0){
@@ -107,12 +110,14 @@ void syncExtraeDataMemory(){
 
 
 void* enviarMemory(void *arg){
+    sleep(1);//Esperar a que se llene la cola por primera vez
     syncExtraeDataMemory(); //datos a convertir
 }
 
 
 
 void collectMemData(int numero) {
+
     pthread_t minaMemoria, sendMemoria;
     int t_minaMemoria, mutex;
 
@@ -120,7 +125,6 @@ void collectMemData(int numero) {
     if (t_minaMemoria != 0){
         _exit(ERROR);
     }
-    sleep(1);//Esperar a que se llene la cola por primera vez
 
     /*
     s = pthread_create(&sendMemoria, NULL, enviarMemory, NULL);

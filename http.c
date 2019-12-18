@@ -89,7 +89,7 @@ void publishData(long int value,  char id[16]){
     snprintf(
             payload,
             4096,
-            "[{\"measurement\":\"Caguacates\",\"tags\":{\"host_name\":\"myhost\",\"miner_id\":\"%s\"},\"time\":\"%s\",\"captures\":{\"value\":%d}}]",
+            "[{\"measurement\":\"Caguacates\",\"tags\":{\"host_name\":\"ulead\",\"miner_id\":\"%s\"},\"time\":\"%s\",\"captures\":{\"value\":%d}}]",
             id,
             buf,
             value
@@ -110,4 +110,3 @@ void publishData(long int value,  char id[16]){
     printf("\n CODE: %d \n", result);
     printf("Sent! \n");
 }
-

@@ -6,7 +6,7 @@
 
 void collectCpuData(int numero);
 static void* minarDatosCpu(void *arg);
-void* enviarCpu();
+void* enviarCpu(void *arg);
 void syncAgregaDataCpu(long user, long nice, long system, long idle, long iowait, long irq, long softirq);
 void syncExtraeDataCpu();
 void extraeDataCpu();

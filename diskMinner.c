@@ -54,6 +54,9 @@ void syncAgregaDataDisco(long int total_activity) {
 //  Hilos
 //------------------------------------------
 static void* minarDisco(void *arg) {
+
+    //sleep(300); //Cada cuanto envia
+
     int t;
     t = pthread_mutex_lock(&disk_lock); //Mutex
     if (t != 0){
@@ -108,6 +111,7 @@ void syncExtraeDataDisco(){
 
 
 void* envarDisco(void *arg){
+    sleep(1);//Esperar a que se llene la cola por primera vez
     syncExtraeDataDisco(); //datos a convertir
 }
 
@@ -121,7 +125,6 @@ void collectDiskData(int numero) {
         _exit(ERROR);
     }
 
-    sleep(1);//Esperar a que se llene la cola por primera vez
 
     /*
     s = pthread_create(&mandaJson, NULL, sendDisco, NULL);

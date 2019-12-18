@@ -55,6 +55,9 @@ void syncAgregaDataNetwork(long int total_activity) {
 //  Hilos
 //------------------------------------------
 static void* minarNetwork(void *arg) {
+
+    //sleep(300); //Cada cuanto envia
+
     int  t;
     t = pthread_mutex_lock(&network_lock); //Mutex
     if (t != 0){
@@ -108,6 +111,7 @@ void syncExtraeDataNetwork(){
 
 
 void* enviarNetwork(void *arg){
+    sleep(1);//Esperar a que se llene la cola por primera vez
     syncExtraeDataNetwork(); //datos a convertir
 }
 
@@ -121,8 +125,6 @@ void collectNetData(int numero) {
     if (t_minaNetwork != 0){
         _exit(ERROR);
     }
-
-    sleep(1);//Esperar a que se llene la cola por primera vez
 
     /*
     s = pthread_create(&sendNetwork, NULL, enviarNetwork, NULL);

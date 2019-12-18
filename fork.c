@@ -44,6 +44,7 @@ int creaHijos(pid_t childPid, int argc, char **argv) {
             case -1:
                 return ERROR;
             case 0:
+                signal(PR_SET_PDEATHSIG, SIGCHLD);
                 choice = toAscii(argv[i][0]);
                 asignaTrabajo(choice);
                 _exit(0);

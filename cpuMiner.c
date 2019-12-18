@@ -4,6 +4,7 @@
 #include "queue.h"
 #include "http.h"
 #include <signal.h>
+#include <curl/curl.h>
 
 #define BUFFER_SIZE 1000
 #define ERROR -1
@@ -82,7 +83,9 @@ void syncAgregaDataCpu(long user, long nice, long system, long idle, long iowait
 //------------------------------------------------------
 static void* minarDatosCpu(void *arg) {
 
-        int t;
+    //sleep(300); //Cada cuanto envia
+
+    int t;
 
         t = pthread_mutex_lock(&cpu_lock); //Mutex
         if (t != 0){
@@ -98,15 +101,13 @@ static void* minarDatosCpu(void *arg) {
         sscanf(buffer,"%s %d %d %d %d %d %d %d %d %d %d", header, &user, &nice, &system, &idle, &iowait, &irq, &softirq, &other1 , &other2, &other3);
         fclose(dato);
         syncAgregaDataCpu(user, nice, system, idle, iowait, irq, softirq);
-
         t = pthread_mutex_unlock(&cpu_lock);
         if (t != 0){
             _exit(ERROR);
         }
-
 }
 
-void* enviarCpu(){
+void* enviarCpu(void *arg){
         sleep(1);//Esperar a que se llene la cola
         syncExtraeDataCpu(); //datos a convertir
 }
@@ -120,18 +121,18 @@ void collectCpuData(int numero) {
     int miner_thread, mutex;
 
     miner_thread = pthread_create(&minaDatosCpu, NULL, minarDatosCpu, NULL);
-        if (miner_thread != 0){
-            _exit(ERROR);
-        }
+    if (miner_thread != 0){
+        _exit(ERROR);
+    }
 
-        /*
-        s = pthread_create(&enviaCpu, NULL, enviarCpu, NULL);
-        if (t != 0){
-            _exit(ERROR);
-        }
-        */
+    /*
+    enviaCpu = pthread_create(&enviaCpu, NULL, enviarCpu, NULL);
+    if (miner_thread != 0){
+        _exit(ERROR);
+    }
+    */
 
-    enviarCpu();
+    enviarCpu(NULL);
 
     //Clean
     mutex = pthread_mutex_destroy(&cpu_lock); //destruye el mutex
